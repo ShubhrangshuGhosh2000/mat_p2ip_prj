@@ -56,3 +56,4 @@ if __name__ == '__main__':
     prot_seq = 'MIFTPFLPPADLSVFQNVKGLQNDPE'
     feature_type_lst = ['AC30', 'PSAAC15', 'ConjointTriad', 'LD10_CTD']
     seq_manual_feat_dict = extract_prot_seq_manual_feat(root_path, prot_seq = prot_seq, feature_type_lst = feature_type_lst, deviceType='cpu')
+
