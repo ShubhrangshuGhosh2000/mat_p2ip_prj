@@ -66,10 +66,3 @@ def PSEAAC(fastas, aaIDs=['GUO_H1','HOPT810101','CHOU_SIDE_MASS'],pairwiseAAIDs=
 	for i in range(0,len(names)):
 		retData.append(names[i] + finalVals[i])
 	return retData
-	
-	
-	
-	
-	
-	
-

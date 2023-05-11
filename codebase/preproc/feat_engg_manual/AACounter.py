@@ -238,4 +238,3 @@ def AACounter(fastas, groupings = None, groupLen=1, sorting=False,flip=False,nor
         retData = (retData,rawData)
         
     return retData
-    

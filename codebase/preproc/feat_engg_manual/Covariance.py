@@ -108,4 +108,3 @@ def Covariance(fastas, aaIDs, lag=30, separate=False, calcType='AutoCovariance',
         retData = (retData,rawData)
         
     return retData
-    

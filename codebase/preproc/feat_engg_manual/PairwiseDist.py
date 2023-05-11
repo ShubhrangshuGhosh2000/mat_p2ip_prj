@@ -101,4 +101,3 @@ def PairwiseDist(fastas, pairwiseAAIDs, lag=30, separate=False, calcType='AvgSq'
         retData = (retData,rawData)
         
     return retData
-    
