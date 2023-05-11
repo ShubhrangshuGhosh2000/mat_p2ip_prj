@@ -40,11 +40,7 @@ def prepare_manual_feat_for_human_seq(root_path='./'):
     human_seq_df = pd.read_csv(os.path.join(root_path,'dataset/preproc_data', 'human_seq.csv'))
     # extract the manual features for the human_sequence list
     print('\n ########## extracting the manual features for the human_sequence list ########## ')
-    feature_type_lst =  ['AC30', 'PSAAC15', 'ConjointTriad', 'LD10_CTD', \
-                        'CHAOS', \
-                        'AAC20', 'AAC400', 'Grantham_Sequence_Order_30', 'Schneider_Sequence_Order_30', \
-                        # 'DUMULTIGROUPCTD', \  # making the number of manual features too large
-                        'Grantham_Quasi_30', 'Schneider_Quasi_30', 'APSAAC30_2']
+    feature_type_lst =  ['AC30', 'PSAAC15', 'ConjointTriad', 'LD10_CTD']
     # the dictionary to store the manual features
     human_seq_manual_feat_dict = {}
     # iterate over the human_seq_df and extract the manual features for each protein sequence 
@@ -64,12 +60,11 @@ def prepare_manual_feat_for_human_seq(root_path='./'):
 
 
 if __name__ == '__main__':
-    # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-    # root_path = os.path.join('/home/rs/19CS92W02/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
+    root_path = os.path.join('/project/root/directory/path/here')
     root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 
-    # ### DO NOT call below function as it may give problem for the sequence parsing of protein id = 7273. The problem was fixed manually
-    # by removing it from everywhere (training as well as test set).
-    # ##### parse_human_to_fasta(root_path)
+    # ### First remove all the references of the protein id = 7273 from everywhere (allSeqs.fasta, training sets,
+    #  test sets, etc.). You can call remove_7273() method from preproc_util.py file.
+    # ## parse_human_to_fasta(root_path)
 
     prepare_manual_feat_for_human_seq(root_path)

@@ -13,7 +13,6 @@ path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-# import PPIPUtils
 from utils_benchmark import PPIPUtils
 
 def readFasta(fname):
@@ -73,7 +72,7 @@ def loadAAData(aaIDs):
         AAProperty.append([float(j) for j in myDict[item]])
     
     return AADict, aaIDs, AAProperty
-    
+
 def loadPairwiseAAData(aaIDs,AADict=None):
     AADict = getAALookup()
     aaIDs = aaIDs
@@ -102,11 +101,8 @@ def loadPairwiseAAData(aaIDs,AADict=None):
         f.close()
         AAProperty.append(data)
     return AADict, aaIDs, AAProperty
-        
-        
-        
 
-        
+
 #local descriptor 10
 #splits each protein sequence into 10 parts prior to computing sequence-based values
 def LDEncode10(fastas,uniqueString='_+_'):

@@ -5,7 +5,6 @@ import re
 
 import joblib
 import numpy as np
-import pandas as pd
 import torch
 from transformers import T5EncoderModel, T5Tokenizer
 
@@ -163,20 +162,6 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
     return features
 
 
-def gen_stat_of_prot_len_dist():
-    print('generating the statistics about the protein length distribution...')
-    human_seq_df = pd.read_csv(os.path.join(root_path,'dataset/preproc_data', 'human_seq.csv'))
-    prot_len_lst = []
-    for index, row in human_seq_df.iterrows():
-        indiv_prot_seq = row['seq']
-        indiv_prot_len = len(indiv_prot_seq)
-        prot_len_lst.append(indiv_prot_len)
-    human_seq_df['prot_len'] = prot_len_lst
-    human_seq_df.to_csv(os.path.join(root_path, 'dataset/preproc_data', 'human_seq.csv'), index=False)
-
-
 if __name__ == '__main__':
-    # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-    # root_path = os.path.join('/home/rs/19CS92W02/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
+    root_path = os.path.join('/project/root/directory/path/here')
     root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-    gen_stat_of_prot_len_dist()

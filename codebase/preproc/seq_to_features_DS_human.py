@@ -4,9 +4,6 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-import umap
-import numpy as np
-from sklearn import preprocessing
 
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
@@ -19,7 +16,7 @@ from utils import preproc_util_DS
 def parse_DS_to_fasta(root_path='./', spec_type = 'human'):
     print('\n########## spec_type: ' + str(spec_type))
     f = open(os.path.join(root_path, 'dataset/orig_data_DS/seqs', spec_type + '.fasta'))
-    prot_lst, seq_lst, prot_len_lst = [], [], []
+    prot_lst, seq_lst = [], []
     idx = 0
     for line in f:
         if idx == 0:
@@ -58,28 +55,15 @@ def add_protTrans_feat_to_DS_seq(root_path='./', protTrans_model_path='./', prot
     filename = os.path.join(root_path, 'dataset/preproc_data_DS', 'DS_seq_feat_dict_' + protTrans_model_name + '_' + spec_type + '.pkl')
     joblib.dump(value=DS_seq_feat_dict, filename=filename, compress=3)
     print("\n The DS_seq_feat_dict is saved as: " + filename)
-    # print("\n######## cleaning all the intermediate stuffs - START ########")
-    # # remove all the intermediate files in the 'temp_result' and 'temp_per_prot_emb_result' directories which
-    # # were used in extract_feat_from_preloaded_protTrans() method
-    # temp_result_dir = os.path.join('temp_result_' + spec_type) 
-    # for temp_file in os.listdir(temp_result_dir):
-    #     os.remove(os.path.join(temp_result_dir, temp_file))
-    # temp_per_prot_emb_result_dir = os.path.join('temp_per_prot_emb_result_' + spec_type) 
-    # for temp_file in os.listdir(temp_per_prot_emb_result_dir):
-    #     os.remove(os.path.join(temp_per_prot_emb_result_dir, temp_file))
-    # print("######## cleaning all the intermediate stuffs - DONE ########")
 
 
 if __name__ == '__main__':
-    # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-    # root_path = os.path.join('/home/rs/19CS92W02/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
+    root_path = os.path.join('/project/root/directory/path/here')
     root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 
     spec_type = 'human'  # human, ecoli, fly, mouse, worm, yeast 
     parse_DS_to_fasta(root_path, spec_type)
 
-    # ## preproc_util.extract_feat_from_protTrans(["A E T C Z A O", "S K T Z P"], 
-    # ## protTrans_model_path=os.path.join(root_path, '../ProtTrans_Models/', protTrans_model_name = 'prot_t5_xl_uniref50')
     add_protTrans_feat_to_DS_seq(root_path
                                     ,protTrans_model_path=os.path.join(root_path, '../ProtTrans_Models/')
                                     , protTrans_model_name = 'prot_t5_xl_uniref50'

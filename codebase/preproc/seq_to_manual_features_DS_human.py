@@ -16,7 +16,7 @@ from preproc.feat_engg_manual import feat_engg_manual_main
 def parse_DS_to_fasta(root_path='./', spec_type = 'human'):
     print('\n########## spec_type: ' + str(spec_type))
     f = open(os.path.join(root_path, 'dataset/orig_data_DS/seqs', spec_type + '.fasta'))
-    prot_lst, seq_lst, prot_len_lst = [], [], []
+    prot_lst, seq_lst = [], []
     idx = 0
     for line in f:
         if idx == 0:
@@ -45,10 +45,6 @@ def prepare_manual_feat_for_DS_seq(root_path='./', spec_type = 'human'):
     # extract the manual features for the DS_sequence list
     print('\n ########## extracting the manual features for the DS_sequence list ########## ')
     feature_type_lst =  ['AC30', 'PSAAC15', 'ConjointTriad', 'LD10_CTD']
-                        # , 'CHAOS' \
-                        # , 'AAC20', 'AAC400', 'Grantham_Sequence_Order_30', 'Schneider_Sequence_Order_30' \
-                        # # , 'DUMULTIGROUPCTD' \  # making the number of manual features too large
-                        # , 'Grantham_Quasi_30', 'Schneider_Quasi_30', 'APSAAC30_2']
     # the dictionary to store the manual features
     DS_seq_manual_feat_dict = {}
     # iterate over the DS_seq_df and extract the manual features for each protein sequence 
@@ -68,8 +64,7 @@ def prepare_manual_feat_for_DS_seq(root_path='./', spec_type = 'human'):
 
 
 if __name__ == '__main__':
-    # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-    # root_path = os.path.join('/home/rs/19CS92W02/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
+    root_path = os.path.join('/project/root/directory/path/here')
     root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 
     spec_type = 'human'  # human, ecoli, fly, mouse, worm, yeast 
