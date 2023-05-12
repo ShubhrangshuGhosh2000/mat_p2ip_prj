@@ -5,27 +5,20 @@
 #Note, this model is built based on the concept of a small corpus size, usually around 20 for amino acids
 #Some things in this file (particularly our implementation of the loss function) may not scale well to larger corpuses
 
-
-import sys, os
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
-# import numpy as np
-# #add parent to path
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
+import os
+import sys
 from pathlib import Path
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils_benchmark.NetworkRunner import NetworkRunner
-from utils_benchmark.AACounter import AACounter
 from torch.utils import data
+from utils_benchmark.AACounter import AACounter
+from utils_benchmark.NetworkRunner import NetworkRunner
+
 
 class SkipGramDatasetTrain(data.Dataset):
     def __init__(self,torchVectors,windowSize,preCompute=False,full_gpu=False):
@@ -68,6 +61,7 @@ class SkipGramDatasetTrain(data.Dataset):
                     self.torchVectors[i] = self.torchVectors[i].cuda().long()
                 self.indices = self.indices.cuda().long()
     
+
     def deactivate(self):
         if self.full_gpu: #push everything to cpu
             if self.preCompute:
@@ -78,9 +72,11 @@ class SkipGramDatasetTrain(data.Dataset):
                     self.torchVectors[i] = self.torchVectors[i].cpu().long()
                 self.indices = self.indices.cpu().long()
         
+
     def __len__(self):
         return self.indices.shape[0]
         
+
     def __getitem__(self,index):
         if self.preCompute:
             xOrg = self.fullX[index].unsqueeze(0)
@@ -104,6 +100,7 @@ class SkipGramDatasetTrain(data.Dataset):
         #to do that, we will return concat(x,y) as train data, and y as class data
         return (torch.cat((xOrg,yOrg)),yOrg)
         
+
 class SkipGramNet(nn.Module):
     def __init__(self,corpusSize=20,hiddenSize=300,negativeSize=5,corpusSmall=True,deviceType='cpu',seed=1):
         super().__init__()
@@ -117,13 +114,12 @@ class SkipGramNet(nn.Module):
         #layer1rev is the reverse of what would normally be layer 1, as we are going to 
         self.layer1rev = nn.Embedding(corpusSize,hiddenSize,sparse=True) #sparse gradient
         
-    def forward(self,x):
-        
+
+    def forward(self,x):     
         #using our dataset hack, the first value in each row of batch x is the word were are training on
         #and the remaining values are the positive examples
         y = x[:,1:] 
         x = x[:,0]
-        
         
         #embed x in layer 0
         x = self.layer0(x)
@@ -163,6 +159,7 @@ class SkipGramNet(nn.Module):
             
         return retData
         
+
 class SkipGramNetworkRunner(NetworkRunner):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='SGD',weight_decay=0,sched_factor=None,sched_patience=None,sched_cooldown=None,sched_thresh=None,predictSoftmax=True):
         super().__init__(net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax)
@@ -193,10 +190,8 @@ class SkipGramNetworkRunner(NetworkRunner):
         return loss
     
     
-
 #1 epoch is more than enough to train a network this small with enough proteins
 def SkipGram(fastas, fileName, windowSize=7, negativeSize=5, hiddenSize=7, corpusSmall=True, numEpochs=1,groupings=None,groupLen=1,sorting=False, flip=False,excludeSame=False, preTrained=False, deviceType='cpu',fullGPU=False,saveModel=True,preCompute=True,softMax=False):
-    
     if groupings is not None:
         groupMap = {}
         idx = 0
@@ -214,7 +209,6 @@ def SkipGram(fastas, fileName, windowSize=7, negativeSize=5, hiddenSize=7, corpu
     #number of unique groups, typically 20 amino acids, times length of our embeddings, typically 1, equals the corpus size
     corpusSize = numgroups**groupLen
     
-    
     skipModel = SkipGramNet(corpusSize,hiddenSize,negativeSize,corpusSmall,deviceType)
 
     skipRunner = SkipGramNetworkRunner(skipModel)
@@ -229,7 +223,6 @@ def SkipGram(fastas, fileName, windowSize=7, negativeSize=5, hiddenSize=7, corpu
             skipRunner.save(fileName.split('.')[0]+'_skipgram.model')
         elif saveModel is not None and saveModel is not False:
             skipRunner.save(saveModel)
-        
     
     #get values for each letter as prediction probabilities
     #each row will represent 1 letter, and be the length of hiddenSize
@@ -238,8 +231,6 @@ def SkipGram(fastas, fileName, windowSize=7, negativeSize=5, hiddenSize=7, corpu
     if softMax:
         vals = F.softmax(vals,1)
     
-
-
     f = open(fileName,'w')
     #create Matrix
     #creating a matrix obviously isn't necessary for this method, but doing this allows us to avoid creating another type of feature file to parse

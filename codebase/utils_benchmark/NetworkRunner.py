@@ -1,21 +1,20 @@
-import sys, os
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
+import os
+import sys
 from pathlib import Path
+
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 import time
-import torch
-import pandas as pd
+
 import numpy as np
-from torch import nn
-from torch.utils import data as torchData
-from utils_benchmark.SimpleDataset import SimpleDataset
+import pandas as pd
+import torch
 import torch.nn.functional as F
 from captum import attr
+from torch.utils import data as torchData
+from utils_benchmark.SimpleDataset import SimpleDataset
 
 
 class NetworkRunner(object):
@@ -24,20 +23,13 @@ class NetworkRunner(object):
         self.hyp = hyp
         
         self.deviceType = hyp.get('deviceType',deviceType)
-        
-        # if deviceType is None or self.deviceType not in ['cpu','cuda']:  # ##################### CHANGED FROM ORIG CODEBASE
-        # if self.deviceType not in ['cpu','cuda']:
-        #     self.deviceType = 'cuda' if torch.cuda.is_available() else 'cpu'
-
         self.net.to(self.deviceType)
         
         self.predictSoftmax = hyp.get('predictSoftmax',predictSoftmax)
         
         self.batch_size = hyp.get('batchSize',batch_size)
         
-        # self.num_workers = 0 if sys.platform == 'win32' else 2
-        # self.num_workers = 0 if sys.platform == 'win32' else os.cpu_count() # ####################### CHANGED FROM ORIG CODEBASE
-        self.num_workers = 0 if sys.platform == 'win32' else 0 # ####################### CHANGED FROM ORIG CODEBASE
+        self.num_workers = 0
         self.epoch = 0
         
         #basic criterion, use set criterion to pass in your own
@@ -75,7 +67,6 @@ class NetworkRunner(object):
         else:
             self.optimizer = None
             
-            
         sched_factor=hyp.get('schedFactor',sched_factor)
         sched_patience=hyp.get('schedPatience',sched_patience)
         sched_cooldown=hyp.get('schedCooldown',sched_cooldown)
@@ -90,20 +81,24 @@ class NetworkRunner(object):
             self.scheduler = None
         else:
             self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer,mode=sched_mode,factor = sched_factor,patience = sched_patience, cooldown=sched_cooldown,threshold = sched_thresh, eps=sched_eps,threshold_mode=sched_thresholdMode,verbose=sched_verbose)
-        
-        
+
+
     def getLoaderArgs(self,shuffle=True, pinMem=False):
         return dict(shuffle=shuffle, batch_size=self.batch_size,num_workers = self.num_workers,pin_memory=pinMem)
-        
+
+
     def setCriterion(self,crit):
         self.criterion = crit
-        
+
+
     def setOptimizer(self,opt):
         self.optimizer = opt
-        
+
+
     def setScheduler(self,sch):
         self.scheduler = sch
-        
+ 
+
     def getL1LossVal(self):
         l1val = 0
         for name, param in self.net.named_parameters():
@@ -128,7 +123,8 @@ class NetworkRunner(object):
     def updateScheduler(self,lossVal):
         if self.scheduler is not None:
             self.scheduler.step(lossVal)
-            
+
+
     #min_lr -- minimum learning rate to continue with, only relevant when using scheduler (set sched_factor to none when calling networkrunner init to not use scheduler)
     def train(self,dataset, num_iterations,seed=1,min_lr=1e-6):
         torch.manual_seed(seed)
@@ -147,7 +143,8 @@ class NetworkRunner(object):
         #release memory
         self.dataset = None
         self.curLoader = None
-    
+
+
     def trainWithValidation(self,dataset,validationDataset,num_iterations,seed=1,min_lr=1e-6):
         torch.manual_seed(seed)
         self.dataset = dataset
@@ -177,8 +174,8 @@ class NetworkRunner(object):
         #release memory
         self.dataset = None
         self.curLoader = None
-    
-            
+
+
     def train_epoch(self):
         self.net.train()
         self.criterion = self.criterion.to(self.deviceType)
@@ -383,7 +380,6 @@ class NetworkRunner(object):
                 
                 totalPairs += data.shape[0]
                 
-                
                 outputs = self.processPredictions(outputs)
     
                 outputs = outputs.to('cpu').detach().numpy()
@@ -417,9 +413,8 @@ class NetworkRunner(object):
     def predictNumpy(self,data, classData=None):
         predictDataset = SimpleDataset(data,classData)
         return self.predict(predictDataset)
-        
-        
-        
+
+
     def save(self,fname):
         if self.scheduler:
             state = {'epoch': self.epoch,
@@ -435,8 +430,8 @@ class NetworkRunner(object):
             'optimizer': self.optimizer.state_dict()
             }
         torch.save(state,fname)
-        
-        
+
+
     def load(self,fname):
         state = torch.load(fname)
         if self.deviceType.startswith('cuda'):  # needed only if the model is built using multiple GPU 
@@ -462,5 +457,4 @@ class NetworkRunner(object):
                 for k, v in state.items():
                     if isinstance(v, torch.Tensor):
                         state[k] = v.cuda()
-
-
+                        

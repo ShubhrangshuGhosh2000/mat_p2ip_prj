@@ -26,6 +26,7 @@ def load_protTrans_tl_model(protTrans_model_path='./', protTrans_model_name = 'p
     print('returning the loaded model and tokenizer')
     return (model, tokenizer) 
 
+
 # use ProtTrans model(s) to extract the features for a given list of sequences 
 def extract_feat_from_protTrans(seq_lst, protTrans_model_path='./', protTrans_model_name = 'prot_t5_xl_uniref50'):
     # first load the vocabulary and ProtTrans Model which will be used subsequently
@@ -35,6 +36,7 @@ def extract_feat_from_protTrans(seq_lst, protTrans_model_path='./', protTrans_mo
     # return the feature list
     print('returning the consolidated feature list')
     return (features, features_2d)
+
 
 # use preloaded ProtTrans model(s) to extract the features for a given list of sequences 
 def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, device='gpu'):
@@ -165,6 +167,7 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, device='gpu
     # return the feature list
     print("\n ################## returning the consolidated 1d and 2d feature list")
     return (features, features_2d)
+
 
 # remove all the entries from all the input files containing id = 7273
 def remove_7273(root_path):

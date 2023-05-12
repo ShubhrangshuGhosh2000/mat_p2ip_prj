@@ -10,9 +10,6 @@
 #maskWeights should be None of have the same length as masking.  Tese weights are multipled by the final counts from each mask.
 #If using masking, if flattenRawValues is True, then values will be flattened before returning (with unneeded values removed).  If false, unfiltered matrices will be returned.
 import sys
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
 from pathlib import Path
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))

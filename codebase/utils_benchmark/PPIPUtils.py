@@ -1,34 +1,24 @@
-import random
-import os
-import time
-import threading
-import sys
-import subprocess
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import metrics
 import gzip
-import os.path
-import shutil
-import urllib.request as request
-import requests
-import zipfile
 import io
-
-import sys, os
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
-# import numpy as np
-# #add parent to path
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
+import os
+import os.path
+import random
+import shutil
+import subprocess
+import sys
+import threading
+import time
+import urllib.request as request
+import zipfile
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import requests
+from sklearn import metrics
+
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
-
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-
 
 
 def getChromosomeNum(string):
@@ -42,6 +32,7 @@ def getChromosomeNum(string):
         except:
             return None
 
+
 def parseConfigFile(configFile):
     config = open(configFile)
     settings = {}
@@ -54,6 +45,7 @@ def parseConfigFile(configFile):
         line = line.split('\t')
         settings[line[0]] = line[1]
     return settings
+
 
 def doWork(st, sema,shell):
     try:
@@ -79,6 +71,7 @@ def doWork(st, sema,shell):
         pass
     sema.release()
 
+
 def runLsts(lsts,threads,shell=False):
     print('start')
     for i in range(0,len(lsts)):
@@ -94,13 +87,9 @@ def runLsts(lsts,threads,shell=False):
             sema.acquire()
         for i in range(0,numThreads):
             sema.release()
-            
+
 
 def calcPrecisionRecallLsts(lst):
-    #finalR = []
-    #finalP = []
-    #finalR.append([])
-    #finalP.append([])
     lst = np.asarray(lst)
     ind = np.argsort(-lst[:,0])
     lst = lst[ind,:]
@@ -112,11 +101,8 @@ def calcPrecisionRecallLsts(lst):
     finalR = np.cumsum(lst[:,1])
     FP = np.arange(1,finalR.shape[0]+1)-finalR
     
-    
     #create precision array (recall counts / total counts)
     finalP = finalR/np.arange(1,lst.shape[0]+1)
-    
-    
     
     #find ties
     x = np.arange(finalR.shape[0]-1)
@@ -135,8 +121,8 @@ def calcPrecisionRecallLsts(lst):
     
     return (finalP,finalR,ACC,TNR)
 
+
 def calcAndPlotCurvesLsts(predictionsLst,classLst,datanames,fileName,title,curveType,lineStyleLst=None,legFont=1,lineWidthLst=None,font=None,removeMargins=False,xMax=None,yMax=None,markerLst=None,colorLst=None,size=None,fig=None,dpi=300,reducePoints=None,frameon=True):
-    
     xAxis = []
     yAxis = []
     for i in range(0,len(predictionsLst)):
@@ -213,9 +199,6 @@ def plotLstsSubplot(xAxis,yAxis,headerLst,fileName,title,fig, curveType='PRC',li
     for item in fig.get_yticklabels():
         item.set_family(font['family'])
         item.set_fontsize(yTickLabelSize)
-    
-
-
 
 
 def plotLsts(xAxis,yAxis,headerLst,fileName,title,curveType='PRC',lineStyleLst=None,legFont=1,lineWidthLst=None,font=None,removeMargins=False,xMax=None,yMax=None,markerLst=None,colorLst=None,size=None,fig=None,dpi=300,frameon=True):
@@ -261,6 +244,7 @@ def plotLsts(xAxis,yAxis,headerLst,fileName,title,curveType='PRC',lineStyleLst=N
             plt.gcf().set_size_inches(size[0],size[-1])
         plt.savefig(fileName,dpi=300)
 
+
 def calcAUPRCLsts(finalP,finalR,maxRecall=0.2):
     scores = []
     for i in range(0,len(finalR)):
@@ -273,8 +257,6 @@ def calcAUPRCLsts(finalP,finalR,maxRecall=0.2):
         cutoff+=1        
         pData = finalP[i][0:cutoff]
         rData = finalR[i][0:cutoff]
-        
-        
         
         #create binary vector of true values
         rData2 = np.hstack((np.zeros(1),rData[:-1]))
@@ -360,6 +342,7 @@ def parseTSV(fname,form='string',delim='\t'):
     f.close()
     return lst
 
+
 def parseTSVLst(fname,form=[],delim='\t'):
     lst = []
     f = open(fname)
@@ -373,13 +356,15 @@ def parseTSVLst(fname,form=[],delim='\t'):
         lst.append(tuple(line))
     f.close()
     return lst
-    
+
+
 def writeTSV2DLst(fname,lst,delim='\t'):
     f = open(fname,'w')
     for item in lst:
         item = delim.join([str(s) for s in item])
         f.write(item+'\n')
     f.close()
+
 
 #takes a symmetric matrix, and writes the top right (N^2+N)/2 entries
 #names fills in the first row and first column, optionally
@@ -395,14 +380,16 @@ def writeTSV2DLstHalf(fname,lst,names=None,delim='\t'):
         f.write(item+'\n')
         idx += 1
     f.close()
-    
+
+
 def createKFoldsAllData(data,k,seed=1,balanced=False):
     data = np.asarray(data)
     classData = np.asarray(data[:,2],dtype=np.int32)
     posData = data[classData==1,:]
     negData = data[classData==0,:]
     return createKFolds(posData.tolist(),negData.tolist(),k,seed,balanced)
-    
+
+
 def createKFolds(pos,neg,k,seed=1,balanced=False):
     random.seed(seed)
     np.random.seed(seed)
@@ -427,7 +414,6 @@ def createKFolds(pos,neg,k,seed=1,balanced=False):
         neg = neg[negIdx[:numEntries],:]
         pos = pos.tolist()
         neg = neg.tolist()
-            
                 
     posIdx = [x for x in range(0,len(pos))]
     negIdx = [x for x in range(0,len(neg))]
@@ -460,8 +446,6 @@ def createKFolds(pos,neg,k,seed=1,balanced=False):
         np.random.shuffle(lst)
         testSplits.append(lst)
     return trainSplits, testSplits
-
-
     
     
 def makeDir(directory):
@@ -473,7 +457,6 @@ def makeDir(directory):
         os.makedirs(directory)
 
 
-
 def formatScores(results,title):
     lst = []
     lst.append([title])
@@ -482,6 +465,7 @@ def formatScores(results,title):
     lst.append(('Max Precision',results['Max Precision']))
     lst.append(('Avg Precision',results['Avg Precision']))
     return lst
+
 
 # D_Script specific method
 def formatScores_DS(results,title):
@@ -516,6 +500,7 @@ def parseUniprotFasta(fileLocation, desiredProteins):
 def downloadWGet(downloadLocation,fileLocation):
     runLsts([['wget '+downloadLocation + ' -O ' + fileLocation]],[1],shell=True)
 
+
 def downloadFile(downloadLocation, fileLocation):
     data = request.urlopen(downloadLocation)
     f = open(fileLocation,'wb')
@@ -532,7 +517,8 @@ def downloadZipFile(downloadLocation, fileLocation):
     r = requests.get(downloadLocation)
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall(fileLocation)
-    
+
+
 def getUniprotFastaLocations(getBoth=True):
     # uniprotFastaLoc = currentdir+'/PPI_Datasets/uniprot_sprot.fasta.gz'
     # uniprotFastaLoc2 = currentdir+'/PPI_Datasets/uniprot_trembl.fasta.gz'

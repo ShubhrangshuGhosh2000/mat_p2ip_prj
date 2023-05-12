@@ -89,7 +89,6 @@ def LDEncode10(fastas,uniqueString='_+_'):
     return (newFastas,10)
 
 
-
 def STDecode(values,parts=10,uniqueString='_+_'):
     #final data list
     valLst = []
@@ -123,4 +122,3 @@ def STDecode(values,parts=10,uniqueString='_+_'):
             a.extend(valDict[item][i])
         valLst.append(a)
     return valLst
-

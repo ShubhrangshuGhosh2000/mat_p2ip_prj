@@ -1,12 +1,9 @@
 import time
-import torch
+
 import numpy as np
-from torch import nn
+import torch
 from torch.utils import data as torchData
-import sys
-import torch.nn.functional as F
 from utils_benchmark.NetworkRunner import NetworkRunner
-import torchinfo
 
 
 #Network runner that Collates X values without touching them, for data that is variable length
@@ -14,10 +11,12 @@ class NetworkRunnerCollate(NetworkRunner):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='Adam',weight_decay=0,sched_factor=0.1,sched_patience=1,sched_cooldown=0,sched_thresh=1e-2,predictSoftmax=True,hyp={}):
         NetworkRunner.__init__(self,net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax,hyp)
         
+
     def getLoaderArgs(self,shuffle=True, pinMem=False):
         d = super().getLoaderArgs(shuffle,pinMem)
         d['collate_fn'] = self.collate
         return d
+    
     
     #same as regular train, but doesn't move data to device    
     def train_epoch(self):
@@ -30,14 +29,6 @@ class NetworkRunnerCollate(NetworkRunner):
             self.optimizer.zero_grad()
             #data = data.to(self.deviceType)
             classData = classData.to(self.deviceType)
-            # ################################# only for finding the total number of trainable parameters in the architecture -start ###############
-            # torchinfo.summary(self.net, 
-            #         input_data = data,  # protA, protB, auxProtA, auxProtB
-            #         # batch_dim = 0, 
-            #         col_names = ('input_size', 'output_size', 'num_params', 'kernel_size', 'mult_adds'),
-            #         device = torch.device('cuda:0'), 
-            #         verbose = 1)
-            # ################################# only for finding the total number of trainable parameters in the architecture -end ###############
             out = self.net.forward(data)
             loss = self.getLoss(out,classData)
             running_loss += loss.item()*classData.shape[0]
@@ -53,7 +44,8 @@ class NetworkRunnerCollate(NetworkRunner):
         self.epoch += 1
         print('Epoch ',self.epoch, 'Train Loss: ', running_loss, 'LR', self.getLr(),'Time: ',end_time - start_time, 's')
         return running_loss
-        
+
+
     #same as regular predict, but doesn't move data to device    
     def predictFromLoader(self,loader):
         outputsLst = []
@@ -84,6 +76,7 @@ class NetworkRunnerCollate(NetworkRunner):
             outputsLst = np.vstack(outputsLst)
             return (outputsLst,runningLoss)
             
+
     def predictWithIndvLossFromLoader(self,loader):
         outputsLst = []
         lossVals = []
@@ -105,7 +98,6 @@ class NetworkRunnerCollate(NetworkRunner):
                 lossVals.extend(loss)
                 totalPairs += data.shape[0]
                 
-                
                 outputs = self.processPredictions(outputs)
     
                 outputs = outputs.to('cpu').detach().numpy()
@@ -114,7 +106,8 @@ class NetworkRunnerCollate(NetworkRunner):
             outputsLst = np.vstack(outputsLst)
             self.criterion.reduction=curRed
             return (outputsLst,lossVals)
-        
+
+
     def predictWithInvLoss(self,predictDataset):
         predictLoader = torchData.DataLoader(predictDataset,**self.getLoaderArgs(False,False))
         return self.predictWithIndvLossFromLoader

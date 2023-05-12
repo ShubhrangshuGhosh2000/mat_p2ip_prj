@@ -1,7 +1,4 @@
 import sys
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
 from pathlib import Path
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
@@ -32,28 +29,33 @@ class GenericNetworkModel(object):
         hyp['schedCooldown'] = hyp.get('schedCooldown',sched_cooldown)
         hyp['weightDecay'] = hyp.get('weightDecay',weightDecay)
         hyp['momentum'] = hyp.get('momentum',momentum)
-        
         self.model = None
-    
+
+
     def saveModelToFile(self,fname):
         if self.model is None:
             print('Error, no model to save')
             exit(42)
         self.model.save(fname)
-        
+
+
     def saveModel(self,fname):
         self.saveModelToFile(fname)
-        
+
+
     def genModel(self):
         pass
-        
+
+
     def loadModelFromFile(self,fname):
         if self.model is None:
             self.genModel()
         self.model.load(fname)
-    
+
+
     def loadModel(self,fname):
         self.loadModelFromFile(fname)
+
 
     #train network
     def fit(self,pairLst,classes,dataMatrix,validationPairs=None, validationClasses=None):
@@ -64,7 +66,8 @@ class GenericNetworkModel(object):
         else:
             validDataset = SimpleTorchDictionaryDataset(dataMatrix,validationPairs,validationClasses,full_gpu=self.fullGPU,deviceType=self.deviceType)
             self.model.trainWithValidation(dataset,validDataset,self.numEpochs,seed=self.seed,min_lr=self.minLr)
-        
+
+
     #predict on network
     def predict_proba(self,pairLst,dataMatrix):
         dataset = SimpleTorchDictionaryDataset(dataMatrix,pairLst)

@@ -9,19 +9,6 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         else:
             self.data=featureData
         
-        #This makes no sense to me, but, it seems it is much faster to index into our data using 2 individual numbers return from numpy than using pytorch
-        #Testing using invidual indexing (x0=data[index[0];x1=data[index[1]]) vs pairwise indexing ( (x0,x1) = data[index]) on a 2D self.data array (shape=(19115,210))
-        #My timings (per epoch) from 100,000 pairs per epoch (note: no difference found using int64 vs int32 vs int16 in torch)
-        #Using torch tensor on GPU, indvidual indexing - 6.7 seconds per epoch
-        #Using torch tensor on CPU, indvidual indexing - 0.85 seconds per epoch
-        #Using torch tensor on GPU, indexing as pair (returns tuple) -- 2 second per epoch
-        #Using torch tensor on CPU, indexing as pair (returns tuple) -- 6.3 seconds per epoch 
-        #Using numpy, indexing as pair (returns tuple) -- 7.1 seconds per epoch 
-        #Using numpy, indvidual indexing -- 0.41 seconds per epoch  (winner)
-        #Doing nothing (just indexing the class list and returning) 0.12
-        #Thus, numpy is about 3x faster than a cpu tensor, and 6x-20x faster than a gpu tensor (which becomes the bottleneck if left on the gpu)
-        #**shrug**
-        
         self.pairLst =pairLst#torch.tensor(pairLst).long()
         
         self.noClasses=False
@@ -53,7 +40,8 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         x0 = x0.float()
         x1 = x1.float()
         return (x0,x1,y)
-        
+
+
     def __len__(self):
         return self.classData.shape[0]
 

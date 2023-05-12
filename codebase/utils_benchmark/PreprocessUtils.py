@@ -44,14 +44,16 @@ def readFasta(fname):
     if curProtID != '':
         retLst.append((curProtID,curAASeq))
     return retLst
-    
+
+
 def getAALookup():
     AA = 'ARNDCQEGHILKMFPSTWYV'
     AADict= {}
     for item in AA:
         AADict[item] = len(AADict)
     return AADict
-    
+
+
 def loadAAData(aaIDs):
     AADict = getAALookup()
     
@@ -72,6 +74,7 @@ def loadAAData(aaIDs):
         AAProperty.append([float(j) for j in myDict[item]])
     
     return AADict, aaIDs, AAProperty
+
 
 def loadPairwiseAAData(aaIDs,AADict=None):
     AADict = getAALookup()
@@ -171,8 +174,6 @@ def MLDEncode(fastas,splits,uniqueString='_+_'):
                 idx += 1
     return (newFastas,(splits**2+splits)//2-1)
 
-            
-        
 
 #splits strings into X equal splits, and creates substrings starting at index 0 for each part
 def stringSplitEncodeEGBW(fastas,splits,uniqueString='_+_'):
@@ -229,6 +230,7 @@ def STDecode(values,parts=10,uniqueString='_+_'):
         valLst.append(a)
     return valLst
 
+
 blosumMatrix = None
 def loadBlosum62():
     global blosumMatrix
@@ -250,11 +252,13 @@ def loadBlosum62():
         blosumMatrix =torch.tensor(blosumMatrix)
     return blosumMatrix
 
+
 def AllvsAllSim(folderName,fastaFileName='allSeqs.fasta',databaseName='species_prot_blast_db',outputFileName='all-vs-all.tsv',numThreads=9):
     fastaFileName = folderName+fastaFileName
     databaseName = folderName+databaseName
     outputFileName = folderName+outputFileName
     PPIPUtils.runLsts([['makeblastdb -in '+fastaFileName+' -dbtype prot -out '+databaseName],['blastp -db '+databaseName+' -query '+fastaFileName+' -outfmt 6 -out '+outputFileName+' -num_threads 9']],[1,1])
+
 
 def genPSSM(name,sequence,folder,eVal=0.001,num_iters=3,database='uniprotSprotFull',numThreads=4):
     database = os.path.join(folder, database)
@@ -276,7 +280,8 @@ def genPSSM(name,sequence,folder,eVal=0.001,num_iters=3,database='uniprotSprotFu
     f.close()
     PPIPUtils.runLsts([['psiblast -db '+database+' -evalue '+str(eVal)+' -num_iterations '+str(num_iters)+' -out_ascii_pssm '+folder+name+'.pssm -query '+folder+'tmp_'+str(name)+'.fasta'+' -num_threads ' + str(numThreads)]],[1])
     os.remove(folder+'tmp_'+str(name)+'.fasta')
-    
+
+
 #currently doesn't handle rare letters, such as b and x, well.  May adjust later
 def loadPSSM(name,sequence,folder,letters='ARNDCQEGHILKMFPSTWYV',secondEntry=False,usePSIBlast=True,eVal=0.001,num_iters=3,database='uniprotSprotFull',numThreads=4):
     lineIdx = 0
@@ -362,4 +367,3 @@ def calcBlosum62(name,sequence,letters='ARNDCQEGHILKMFPSTWYV'):
     blosumMat = blosum[letters,:]
     blosumMat = blosumMat[:,letterMap].tolist()
     return blosumMat
-   

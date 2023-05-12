@@ -1,20 +1,18 @@
 import os
 import sys
-
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# parentdir = os.path.dirname(currentdir)
-# sys.path.append(parentdir)
-
 from pathlib import Path
+
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-import numpy as np
-from joblib import dump, load
-import torch
 import copy
+
+import numpy as np
+import torch
+from joblib import dump, load
 from utils_benchmark.ProteinFeaturesHolder import ProteinFeaturesHolder
+
 
 class GenericModule(object):
     def __init__(self, hyperParams = None):
@@ -36,7 +34,8 @@ class GenericModule(object):
         self.model=None
         self.scaleData = None
         self.featDict=  self.hyperParams.get('featLst',{})
-        
+
+
     def saveModelToFile(self,fname):
         if self.model is None:
             print('Error, no model to save')
@@ -44,31 +43,37 @@ class GenericModule(object):
         else:
             self.model.saveModelToFile(fname)
         self.saveFeatScaler(fname)
-        
+
+
     def loadModelFromFile(self,fname):
         if self.model is None:
             self.genModel()
         self.model.loadModel(fname)
-        
+
 
     def saveFeatScaler(self,fname):
         if self.scaleData is not None:
             dump(self.scaleData,fname+'_scaler')
-            
+
+
     def loadFeatScaler(self,fname):
         for item in self.featDict:
             if os.path.exists(fname+'_scaler'):
                 self.scaleData = load(fname+'_scaler')
-            
+
+
     def setModel(self,model):
         self.model=model
-        
+
+
     def genModel(self):
         pass
-        
+
+
     def getModel(self):
         return self.model
-    
+
+
     #load from each listed file to each key in the featDict
     def loadFeatureData(self,featureFolder):
         if featureFolder[-1] not in ['/','\\']:
@@ -79,7 +84,8 @@ class GenericModule(object):
             for fname in fnames:
                 lst.append(featureFolder+fname)
             self.featuresData[item] = ProteinFeaturesHolder(lst)
-        
+
+
     #by default, load all data into a single 2D matrix, and return it with the class Data
     #if returnDict = True, returns dictionary instead
     def genFeatureData(self,pairs,dataType='train',returnDict=False):
@@ -96,6 +102,7 @@ class GenericModule(object):
             return lst[0], classData
         else:
             return np.hstack(lst), classData
+
 
     #used to create validation data from a training set
     def splitFeatures(self,trainFeatures,trainClasses,split=0.1):
@@ -176,6 +183,7 @@ class GenericModule(object):
             return proteinNameMapping, dataMatrix
         else:
             return proteinNameMapping, dataMatrix, lookupMatrix
+
 
     # ##################################### added for the label-encoding purpose ###################################
     def loadLabelEncodingFileWithPadding(self,fileName,maxProteinLength=1200,zeroPadding='right',returnLookup = False):

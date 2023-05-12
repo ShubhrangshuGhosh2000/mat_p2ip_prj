@@ -1,12 +1,4 @@
 import sys
-
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
-# import numpy as np
-# #add parent to path
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
 from pathlib import Path
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
@@ -16,7 +8,6 @@ from utils_benchmark.AACounter import AACounter
 
 #1 epoch is more than enough to train a network this small with enough proteins
 def OneHotEncoding(fastas, fileName, groupings = ['AGV','ILFP','YMTS','HNQW','RK','DE','C'],groupLen=1,sorting=False, flip=False,excludeSame=False,deviceType='cpu'):
-    
     if groupings is not None:
         groupMap = {}
         idx = 0
@@ -47,14 +38,5 @@ def OneHotEncoding(fastas, fileName, groupings = ['AGV','ILFP','YMTS','HNQW','RK
         stVals = item[1].cpu().numpy()
         f.write(name+'\t'+','.join(str(k) for k in stVals) +'\n')
     f.close()
-    
-    #for item in parsedData[1:]:
-    #    name = item[0]
-    #    stVals = item[1].cpu().numpy()
-    #    data = np.zeros((corpusSize,stVals.shape[0]),dtype=np.int64)
-    #    colIdx = np.arange(0,stVals.shape[0],dtype=np.int64)
-    #    data[stVals,colIdx] = 1
-    #    dump(data,folder+name+'.joblibdump')
-    return None
 
-    
+    return None
