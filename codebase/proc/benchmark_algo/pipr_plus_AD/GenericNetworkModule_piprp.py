@@ -7,7 +7,7 @@ path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-from utils_benchmark.GenericModule import GenericModule
+from utils.GenericModule import GenericModule
 import numpy as np
 
 #designed for usage with neural network models using dictionary datasets

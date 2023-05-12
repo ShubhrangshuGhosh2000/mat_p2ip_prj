@@ -16,7 +16,7 @@ sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 from utils import dl_reproducible_result_util
-from utils_benchmark.NetworkRunnerCollate import NetworkRunnerCollate
+from utils.NetworkRunnerCollate import NetworkRunnerCollate
 from proc.benchmark_algo.pipr_plus_DS.GenericNetworkModel_piprp import GenericNetworkModel
 from proc.benchmark_algo.pipr_plus_DS.GenericNetworkModule_piprp import GenericNetworkModule
 from proc.benchmark_algo.pipr_plus_DS.positional_encoder_piprp import PositionalEncoder

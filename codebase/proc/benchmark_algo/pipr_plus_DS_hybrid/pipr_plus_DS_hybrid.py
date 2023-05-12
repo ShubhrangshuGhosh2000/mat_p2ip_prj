@@ -6,7 +6,7 @@ sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 import pandas as pd
-from utils_benchmark import PPIPUtils
+from utils import PPIPUtils
 
 root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 

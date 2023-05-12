@@ -7,7 +7,7 @@ path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-# from utils_benchmark.SimpleTorchDictionaryDataset import SimpleTorchDictionaryDataset
+# from utils.SimpleTorchDictionaryDataset import SimpleTorchDictionaryDataset
 from proc.benchmark_algo.pipr_plus_AD.SimpleTorchDictionaryDataset_piprp import SimpleTorchDictionaryDataset
 
 #designed for usage with neural network models using dictionary datasets

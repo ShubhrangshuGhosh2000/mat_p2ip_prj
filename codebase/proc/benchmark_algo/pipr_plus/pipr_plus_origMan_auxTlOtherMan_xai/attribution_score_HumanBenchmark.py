@@ -7,7 +7,7 @@ sys.path.insert(0, str(path_root))
 
 import statistics
 import pandas as pd
-from preproc.benchmark_preproc.ProjectDataLoader import *
+from utils.ProjectDataLoader import *
 
 
 # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')

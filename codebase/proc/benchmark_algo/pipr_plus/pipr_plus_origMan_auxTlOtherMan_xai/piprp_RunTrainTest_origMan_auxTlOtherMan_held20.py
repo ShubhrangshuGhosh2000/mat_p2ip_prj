@@ -9,7 +9,7 @@ sys.path.insert(0, str(path_root))
 
 import numpy as np
 # import PPIPUtils
-from utils_benchmark import PPIPUtils
+from utils import PPIPUtils
 import time
 
 

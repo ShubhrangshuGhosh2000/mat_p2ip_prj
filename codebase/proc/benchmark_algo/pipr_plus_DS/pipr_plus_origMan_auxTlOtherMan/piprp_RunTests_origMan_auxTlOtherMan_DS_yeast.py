@@ -17,10 +17,10 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 # import PPIPUtils
-from utils_benchmark import PPIPUtils
+from utils import PPIPUtils
 from proc.benchmark_algo.pipr_plus_DS.pipr_plus_origMan_auxTlOtherMan.piprp_ChenNetwork_origMan_auxTlOtherMan_DS_test import ChenNetworkModule
-from preproc.benchmark_preproc.ProjectDataLoader import *
-from preproc.benchmark_preproc.PreProcessDatasets import createFeatures
+from utils.ProjectDataLoader import *
+from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
 from proc.benchmark_algo.pipr_plus_DS.pipr_plus_origMan_auxTlOtherMan import piprp_RunTrainTest_origMan_auxTlOtherMan_DS
 
 
@@ -69,11 +69,11 @@ def genSequenceFeatures(spec_type = 'human'):
     print('\n########## spec_type: ' + str(spec_type))
     featureDir = os.path.join(root_path, 'dataset/preproc_data_DS/benchmark_feat/')
 
-    # createFeatures(featureDir+'PPI_Datasets/Li_DS/',set(['AC30','LD10_CTD','PSAAC15','conjointTriad','PSEAAC_3','Random500','AllvsAllSim']))
-    # createFeatures(featureDir+'PPI_Datasets/Human2021/',set(['EGBW11','AC30','LD10_CTD','PSAAC15','conjointTriad','MMI','Moran','Geary','PSSMAAC','PSSMDPC','AC11','PSAAC9','SkipGramAA7','OneHotEncoding7','OneHotEncoding24','NumericEncoding22','AC14_30','MCD5CTD','SkipGramAA25H20','NumericEncoding20Skip3','Geary_Zhao_30','NMBroto_Zhao_30','Moran_Zhao_30','PSEAAC_Zhao_30','Grantham_Quasi_30','Schneider_Quasi_30','MCD4CTD','Grantham_Sequence_Order_30','Schneider_Sequence_Order_30','PSSMLST','SkipWeightedConjointTriad','PSAAC20','AAC20','AAC400','DUMULTIGROUPCTD','APSAAC30_2','JIA_DWT','MLD4CTD','NMBROTO_6_30','PSSMDCT','NMBROTO_9','MORAN_9','GEARY_9','PSEAAC_3','CHAOS','Random500','AllvsAllSim']))
+    # extract_prot_seq_2D_manual_feat(featureDir+'PPI_Datasets/Li_DS/',set(['AC30','LD10_CTD','PSAAC15','conjointTriad','PSEAAC_3','Random500','AllvsAllSim']))
+    # extract_prot_seq_2D_manual_feat(featureDir+'PPI_Datasets/Human2021/',set(['EGBW11','AC30','LD10_CTD','PSAAC15','conjointTriad','MMI','Moran','Geary','PSSMAAC','PSSMDPC','AC11','PSAAC9','SkipGramAA7','OneHotEncoding7','OneHotEncoding24','NumericEncoding22','AC14_30','MCD5CTD','SkipGramAA25H20','NumericEncoding20Skip3','Geary_Zhao_30','NMBroto_Zhao_30','Moran_Zhao_30','PSEAAC_Zhao_30','Grantham_Quasi_30','Schneider_Quasi_30','MCD4CTD','Grantham_Sequence_Order_30','Schneider_Sequence_Order_30','PSSMLST','SkipWeightedConjointTriad','PSAAC20','AAC20','AAC400','DUMULTIGROUPCTD','APSAAC30_2','JIA_DWT','MLD4CTD','NMBROTO_6_30','PSSMDCT','NMBROTO_9','MORAN_9','GEARY_9','PSEAAC_3','CHAOS','Random500','AllvsAllSim']))
 
-    # createFeatures(featureDir+'PPI_Datasets/Human2021/',set(['SkipGramAA7','LabelEncoding','PSSM', 'Blosum62'])) 
-    createFeatures(featureDir+spec_type+'/',set(['SkipGramAA7','LabelEncoding','PSSM', 'Blosum62']), spec_type = spec_type) 
+    # extract_prot_seq_2D_manual_feat(featureDir+'PPI_Datasets/Human2021/',set(['SkipGramAA7','LabelEncoding','PSSM', 'Blosum62'])) 
+    extract_prot_seq_2D_manual_feat(featureDir+spec_type+'/',set(['SkipGramAA7','LabelEncoding','PSSM', 'Blosum62']), spec_type = spec_type) 
 
 
 if __name__ == '__main__':

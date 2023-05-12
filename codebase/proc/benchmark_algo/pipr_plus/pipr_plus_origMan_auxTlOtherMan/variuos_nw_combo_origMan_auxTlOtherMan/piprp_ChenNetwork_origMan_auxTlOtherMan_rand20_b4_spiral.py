@@ -16,7 +16,7 @@ sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 import torch
-from utils_benchmark.NetworkRunnerCollate import NetworkRunnerCollate
+from utils.NetworkRunnerCollate import NetworkRunnerCollate
 from proc.benchmark_algo.pipr_plus.GenericNetworkModel_piprp import GenericNetworkModel
 from proc.benchmark_algo.pipr_plus.GenericNetworkModule_piprp import GenericNetworkModule
 import torch

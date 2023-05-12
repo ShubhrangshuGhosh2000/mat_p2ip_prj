@@ -9,7 +9,7 @@ path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-from preproc.feat_engg_manual import feat_engg_manual_main
+from utils import feat_engg_manual_main
 
 
 # parse the content of allSeqs.fasta and create a dataframe containing 'prot_id' and 'seq' columns
@@ -52,7 +52,7 @@ def prepare_manual_feat_for_DS_seq(root_path='./', spec_type = 'human'):
         print('starting ' + str(index) + '-th protein out of ' + str(DS_seq_df.shape[0]))
         prot_id, prot_seq = row['prot_id'], row['seq']
         # extract the manual features
-        seq_manual_feat_dict = feat_engg_manual_main.extract_prot_seq_manual_feat(root_path,
+        seq_manual_feat_dict = feat_engg_manual_main.extract_prot_seq_1D_manual_feat(root_path,
                                         prot_seq=prot_seq, feature_type_lst=feature_type_lst)
         # store them in DS_seq_manual_feat_dict 
         DS_seq_manual_feat_dict[prot_id] = {'seq': prot_seq, 'seq_manual_feat_dict': seq_manual_feat_dict}
