@@ -158,7 +158,7 @@ class SkipGramNet(nn.Module):
         retData = torch.cat((pos,neg),dim=1)
             
         return retData
-        
+
 
 class SkipGramNetworkRunner(NetworkRunner):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='SGD',weight_decay=0,sched_factor=None,sched_patience=None,sched_cooldown=None,sched_thresh=None,predictSoftmax=True):
@@ -188,8 +188,8 @@ class SkipGramNetworkRunner(NetworkRunner):
             negVals = self.lgs(-negVals)
             loss = torch.mean(posVals.sum(1)+negVals.sum(1)) * -1
         return loss
-    
-    
+
+
 #1 epoch is more than enough to train a network this small with enough proteins
 def SkipGram(fastas, fileName, windowSize=7, negativeSize=5, hiddenSize=7, corpusSmall=True, numEpochs=1,groupings=None,groupLen=1,sorting=False, flip=False,excludeSame=False, preTrained=False, deviceType='cpu',fullGPU=False,saveModel=True,preCompute=True,softMax=False):
     if groupings is not None:

@@ -106,20 +106,21 @@ class NetworkRunner(object):
                 l1val = l1val + torch.abs(param).sum()
         return l1val
 
-        
+
     def getLr(self):
         for param_group in self.optimizer.param_groups:
             return param_group['lr']
-        
-        
+
+
     def getLoss(self,output,classData):
         return self.criterion(output,classData)
-        
-    
+
+
     def trainNumpy(self,features,classes,num_iterations,seed=1,min_lr=1e-6,full_gpu=False):
         dataset = SimpleDataset(features,classes,full_gpu)
         self.train(dataset,num_iterations,seed,min_lr)
-        
+
+
     def updateScheduler(self,lossVal):
         if self.scheduler is not None:
             self.scheduler.step(lossVal)
@@ -201,7 +202,7 @@ class NetworkRunner(object):
         print('Epoch ',self.epoch, 'Train Loss: ', running_loss, 'LR', self.getLr(),'Time: ',end_time - start_time, 's')
         return running_loss
 
-    
+
     def processPredictions(self,outputs):
         if self.predictSoftmax:
             outputs = F.softmax(outputs,1)
@@ -237,7 +238,6 @@ class NetworkRunner(object):
             return (outputsLst,runningLoss)
 
 
-    #same as regular predict, but doesn't move data to device    
     def predictFromLoader_xai_DS(self,loader,resultsFolderName):
         man_2d_feat_attrbn_lst, man_1d_feat_attrbn_lst, tl_1d_feat_attrbn_lst = [], [], []
         actual_label_lst = []
@@ -300,7 +300,6 @@ class NetworkRunner(object):
         sys.exit('Exitting...')
 
 
-    #same as regular predict, but doesn't move data to device    
     def predictFromLoader_xai_humanBenchmark(self,loader,predictFileName):
         man_2d_feat_attrbn_lst, man_1d_feat_attrbn_lst, tl_1d_feat_attrbn_lst = [], [], []
         actual_label_lst = []
@@ -389,7 +388,8 @@ class NetworkRunner(object):
             lossVals = np.vstack(lossVals)
             self.criterion.reduction=curRed
             return (outputsLst,lossVals)
-        
+
+
     def predictWithInvLoss(self,predictDataset):
         predictLoader = torchData.DataLoader(predictDataset,**self.getLoaderArgs(False,False))
         return self.predictWithIndvLossFromLoader(predictLoader)
@@ -434,8 +434,7 @@ class NetworkRunner(object):
 
     def load(self,fname):
         state = torch.load(fname)
-        if self.deviceType.startswith('cuda'):  # needed only if the model is built using multiple GPU 
-                                                # like D-Script_human model
+        if self.deviceType.startswith('cuda'):  # needed only if the model is built using multiple GPU like D-Script_human model
             # create new dict that does not contain `module.`
             new_state_net_dict = {}
             for k, v in state['net'].items():

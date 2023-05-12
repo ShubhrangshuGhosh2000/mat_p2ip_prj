@@ -10,14 +10,14 @@ from utils.NetworkRunner import NetworkRunner
 class NetworkRunnerCollate(NetworkRunner):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='Adam',weight_decay=0,sched_factor=0.1,sched_patience=1,sched_cooldown=0,sched_thresh=1e-2,predictSoftmax=True,hyp={}):
         NetworkRunner.__init__(self,net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax,hyp)
-        
+
 
     def getLoaderArgs(self,shuffle=True, pinMem=False):
         d = super().getLoaderArgs(shuffle,pinMem)
         d['collate_fn'] = self.collate
         return d
-    
-    
+
+
     #same as regular train, but doesn't move data to device    
     def train_epoch(self):
         self.net.train()
@@ -75,7 +75,7 @@ class NetworkRunnerCollate(NetworkRunner):
             runningLoss /= totalPairs
             outputsLst = np.vstack(outputsLst)
             return (outputsLst,runningLoss)
-            
+
 
     def predictWithIndvLossFromLoader(self,loader):
         outputsLst = []
@@ -111,7 +111,7 @@ class NetworkRunnerCollate(NetworkRunner):
     def predictWithInvLoss(self,predictDataset):
         predictLoader = torchData.DataLoader(predictDataset,**self.getLoaderArgs(False,False))
         return self.predictWithIndvLossFromLoader
-    
+
 
     def collate(self,tuples):
         lst = []
@@ -122,4 +122,3 @@ class NetworkRunnerCollate(NetworkRunner):
             lst[i] = torch.vstack(lst[i]).to(self.deviceType)
         classes = torch.vstack(classes).squeeze(1)
         return (lst,classes)
-        

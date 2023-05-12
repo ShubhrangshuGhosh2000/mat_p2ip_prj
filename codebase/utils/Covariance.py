@@ -8,12 +8,7 @@ sys.path.insert(0, str(path_root))
 from utils.PreprocessUtils import loadAAData
 
 def Covariance(fastas, aaIDs, lag=30, separate=False, calcType='AutoCovariance', deviceType='cpu'):
-    #set device type = 'cpu' for these calculations, since they go protein by protein
-    #in the future, we made run multiple proteins at once on the gpu, but, we woulc have
-    #to find a way to pad the data and ensure that the for loops don't run into the padding data
-    #which seems overly complicated for now
     deviceType = 'cpu'
-    
     AA, AANames, AAData = loadAAData(aaIDs)
     
     #normalize all features

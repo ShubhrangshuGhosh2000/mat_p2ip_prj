@@ -1,10 +1,10 @@
 import sys, os
+import torch
 
 from pathlib import Path
 path_root = Path(__file__).parents[1]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
-import torch
 import joblib
 
 from utils.PreprocessUtils import calcBlosum62

@@ -1,4 +1,5 @@
 import numpy as np
+
 class ProteinFeaturesHolder(object):
     def __init__(self,featLst,convertToInt=True):
         #note, we assume that all files in feature list contain 1 row per protein, and are in the same order

@@ -12,20 +12,11 @@ def PSSM(fastas, directory, processPSSM=True,deviceType='cpu'):
     # ######### MUST RUN THE FOLLOWING IN THE SAME SHELL WHERE THE PROGRAM WILL RUN TO SET THE makeblastdb AND psiblast PATH (see genPSSM() method of PreprocessUtils.py)
     # export PATH=$PATH:/scratch/pralaycs/Shubh_Working_Remote/ncbi-blast-2.13.0+/bin
     # echo $PATH
-    
-    deviceType='cpu'#no speed up to move data to gpu for a single summation
-    # retVals = []
-    # header = ['protein']
-    # for i in range(0,20):
-    #     header.append('a'+str(i))
-    # retVals.append(header)
 
     pssm_dict = {}
     #calculate the sum of all PSSM data
     # for item in fastas:
     for ind in range(len(fastas)):
-    # for ind in range(47642, len(fastas)):
-    # for ind in range(30000, 40000):
         item = fastas[ind]
         name = item[0]
         print('@@@@@@@@@@@ ind: ' + str(ind))

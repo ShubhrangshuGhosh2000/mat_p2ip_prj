@@ -127,74 +127,7 @@ def LDEncode10(fastas,uniqueString='_+_'):
                 newFastas.append([newName,newString])
                 idx += 1
     return (newFastas,10)
-    
-    
-#splits fasta strings in n equal size parts, and return encoding on all subsets of the original string (2**N-2 groups).
-def MCDEncode(fastas,splits,uniqueString='_+_'):
-    newFastas = []
-    for item in fastas:
-        name = item[0]
-        st = item[1]
-        intervals = [0]
-        for i in range(1,splits):
-            intervals.append((len(st)*i)//(splits))
-        intervals.append(len(st))
-        #skip empty and full strings
-        for newIdx in range(1,2**splits-1):
-            curSt = ''
-            idx = newIdx
-            newName = name+uniqueString+str(idx-1)
-            for i in range(0,splits):
-                if newIdx % 2 == 1:
-                    curSt += st[intervals[i]:intervals[i+1]]
-                newIdx = newIdx // 2
-            newFastas.append([newName,curSt])
-    return (newFastas,2**splits-2)
-        
-#splits fasta strings in n equal size parts, and return encoding on all subsets of the original string that are continuous
-def MLDEncode(fastas,splits,uniqueString='_+_'):
-    newFastas = []
-    for item in fastas:
-        name = item[0]
-        st = item[1]
-        
-        intervals = [0]
-        for i in range(1,splits):
-            intervals.append(len(st)//splits*i)
-        intervals.append(len(st))
-        mappings= []
-        idx = 0
-        for k in range(1,splits+1):
-            for i in range(0,splits+1-k):
-                if i == 0 and k == splits:
-                    continue #skip full sequence
-                newName=name+uniqueString+str(idx)
-                newString = st[intervals[i]:intervals[i+k]]
-                newFastas.append([newName,newString])
-                idx += 1
-    return (newFastas,(splits**2+splits)//2-1)
 
-
-#splits strings into X equal splits, and creates substrings starting at index 0 for each part
-def stringSplitEncodeEGBW(fastas,splits,uniqueString='_+_'):
-    newFastas = []
-    for item in fastas:
-        name = item[0]
-        st = item[1]
-        intervals = []
-        for i in range(1,splits):
-            intervals.append((len(st)*i)//splits)
-        intervals.append(len(st))
-        
-        mappings= []
-        idx = 0
-        for idx in range(0,len(intervals)):
-            newName=name+uniqueString+str(idx)
-            newString = st[0:intervals[idx]]
-            newFastas.append([newName,newString])
-            idx += 1
-    return newFastas
-    
 
 def STDecode(values,parts=10,uniqueString='_+_'):
     #final data list
@@ -251,13 +184,6 @@ def loadBlosum62():
             blosumMatrix.append([int(item) for item in line[1:]])
         blosumMatrix =torch.tensor(blosumMatrix)
     return blosumMatrix
-
-
-def AllvsAllSim(folderName,fastaFileName='allSeqs.fasta',databaseName='species_prot_blast_db',outputFileName='all-vs-all.tsv',numThreads=9):
-    fastaFileName = folderName+fastaFileName
-    databaseName = folderName+databaseName
-    outputFileName = folderName+outputFileName
-    PPIPUtils.runLsts([['makeblastdb -in '+fastaFileName+' -dbtype prot -out '+databaseName],['blastp -db '+databaseName+' -query '+fastaFileName+' -outfmt 6 -out '+outputFileName+' -num_threads 9']],[1,1])
 
 
 def genPSSM(name,sequence,folder,eVal=0.001,num_iters=3,database='uniprotSprotFull',numThreads=4):

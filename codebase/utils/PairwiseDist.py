@@ -35,8 +35,7 @@ def PairwiseDist(fastas, pairwiseAAIDs, lag=30, separate=False, calcType='AvgSq'
                 #divide by std  (std = square of mean norm, averaged, then apply sqrt)
                 featVals = featVals / (featVals.pow(2).mean().pow(.5))
         AAData[AAIdx] = featVals
-    
-        
+
     #return data
     retData = []
     #if seperate, keep row headers and data in seperate lists
@@ -71,7 +70,6 @@ def PairwiseDist(fastas, pairwiseAAIDs, lag=30, separate=False, calcType='AvgSq'
             #get the feature data
             featVals = AAData[featIdx]
             
-            
             #for all lags, run calculations
             for j in range(1,lag+1):
                 idx0 = stIdx[:-j]
@@ -83,7 +81,6 @@ def PairwiseDist(fastas, pairwiseAAIDs, lag=30, separate=False, calcType='AvgSq'
                 elif calcType == 'AvgSq':
                     fastaVals.append((vals**2).mean().item())
                 
-                
         if not separate and scaleType != 'All':
             retData.append(fastaVals)
         else:
@@ -94,4 +91,3 @@ def PairwiseDist(fastas, pairwiseAAIDs, lag=30, separate=False, calcType='AvgSq'
         retData = (retData,rawData)
         
     return retData
-    

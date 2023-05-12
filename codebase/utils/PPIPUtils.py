@@ -155,8 +155,8 @@ def calcAndPlotCurvesLsts(predictionsLst,classLst,datanames,fileName,title,curve
             yAxis.append(recall)
             xAxis.append(1-tnr)
     plotLsts(xAxis,yAxis,datanames,fileName,title,curveType,lineStyleLst,legFont,lineWidthLst,font,removeMargins,xMax,yMax,markerLst,colorLst,size,fig,dpi,frameon=frameon)
-    
-    
+
+
 def plotLstsSubplot(xAxis,yAxis,headerLst,fileName,title,fig, curveType='PRC',lineStyleLst=None,legFont=1,lineWidthLst=None,font=None,removeMargins=False,xMax=None,yMax=None,markerLst=None,colorLst=None,size=None,dpi=300,frameon=True):
     if fig is None:
         return
@@ -446,8 +446,8 @@ def createKFolds(pos,neg,k,seed=1,balanced=False):
         np.random.shuffle(lst)
         testSplits.append(lst)
     return trainSplits, testSplits
-    
-    
+
+
 def makeDir(directory):
     if directory[-1] != '/' and directory[-1] != '\\':
         directory += '/'
@@ -473,7 +473,7 @@ def formatScores_DS(results,title):
     lst.append([title])
     lst.append(('AUPR',results['AUPR'],'Precision',results['Precision'],'Recall',results['Recall'],'AUROC',results['AUROC']))
     return lst
-    
+
 
 def parseUniprotFasta(fileLocation, desiredProteins):
     f= gzip.open(fileLocation,'rb')
@@ -495,7 +495,7 @@ def parseUniprotFasta(fileLocation, desiredProteins):
     if curUniID in desiredProteins:
         seqDict[curUniID] = curAASeq
     return seqDict
-    
+
 
 def downloadWGet(downloadLocation,fileLocation):
     runLsts([['wget '+downloadLocation + ' -O ' + fileLocation]],[1],shell=True)

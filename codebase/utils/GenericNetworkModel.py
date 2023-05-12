@@ -9,7 +9,6 @@ from utils.SimpleTorchDictionaryDataset import SimpleTorchDictionaryDataset
 #designed for usage with neural network models using dictionary datasets
 class GenericNetworkModel(object):
     def __init__(self,hyp={},fullGPU=False,deviceType=None,numEpochs=100,batchSize=256,optType='Adam',lr=1e-2,momentum=0,minLr=1e-6,schedFactor=.1,schedPatience=2,schedThresh=1e-2,sched_cooldown=0,weightDecay=0,seed=1):
-    
         self.hyp = hyp
         self.fullGPU = hyp.get('fullGPU',fullGPU)
         self.numEpochs = hyp.get('numEpochs',numEpochs)
