@@ -8,7 +8,7 @@ sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 # from utils.SimpleTorchDictionaryDataset import SimpleTorchDictionaryDataset
-from proc.mtf_p2ip.SimpleTorchDictionaryDataset_piprp import SimpleTorchDictionaryDataset
+from proc.mtf_p2ip_DS.SimpleTorchDictionaryDataset_mtf import SimpleTorchDictionaryDataset
 
 #designed for usage with neural network models using dictionary datasets
 class GenericNetworkModel(object):
@@ -72,8 +72,9 @@ class GenericNetworkModel(object):
         probs,loss = self.model.predict(dataset)
         return probs
 
+
     #predict on network
-    def predict_proba_xai_humanBenchmark(self,pairLst,dataMatrix,oneDdataMatrix,predictClasses,predictFileName):
+    def predict_proba_xai_DS(self,pairLst,dataMatrix,oneDdataMatrix,predictClasses,resultsFolderName):
         dataset = SimpleTorchDictionaryDataset(dataMatrix,oneDdataMatrix,pairLst,classData=predictClasses)
-        attrbn_df = self.model.predict_xai_humanBenchmark(dataset,predictFileName)
-        return attrbn_df
+        probs,loss = self.model.predict_xai_DS(dataset,resultsFolderName)
+        return probs

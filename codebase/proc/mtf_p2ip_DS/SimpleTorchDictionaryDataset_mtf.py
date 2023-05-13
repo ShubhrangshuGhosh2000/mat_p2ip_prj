@@ -82,3 +82,5 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         self.oneDdata = self.oneDdata.cpu()
         #self.pairLst = self.pairLst.cpu()
         self.classData = self.classData.cpu()
+
+for f in mtf_p2ip_AD/*.py; do mv "$f" "$(echo "$f" | sed s/mtf/mtf/)"; done
