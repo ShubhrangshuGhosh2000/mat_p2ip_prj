@@ -1,7 +1,0 @@
-############################ Best hyper-param combo related details -Start ##################
-
-{'best_itr_no': 372, 'best_hparam_combo_dict': {'fullGPU': True, 'deviceType': 'cuda', 'hiddenSize': 70, 'numLayers': 4, 'leakyReLU_negSlope': 0.1, 'n_heads': 1, 'layer_1_size': 1024}, 'best_score_dict': {'avg_ACC': 0.9831876260928044, 'avg_AUC': 0.9944252789195538}, 'best_lr': 0.0006650902353353398}
-
- ############################ Best hyper-param combo related details -End ##################
-
- ***** NOTE: 'leakyReLU_negSlope': 0.1 is irrelevant as it is not tuned. Default used is 0.3
