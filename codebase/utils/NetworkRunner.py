@@ -286,7 +286,7 @@ class NetworkRunner(object):
                                 , 'actual_label': actual_label_lst
                                 })
         # read prediction tsv file and merge it with attrbn_df
-        spec_type = resultsFolderName.split('/')[-2].replace('piprp_res_origMan_auxTlOtherMan_', '')
+        spec_type = resultsFolderName.split('/')[-2].replace('mtf_res_origMan_auxTlOtherMan_', '')
         pred_csv_name = os.path.join(resultsFolderName, 'pred_' + spec_type + '_DS.tsv')
         pred_df = pd.read_csv(pred_csv_name, delimiter='\t', header=None, names=['pred_prob_1', 'actual_label_2'])
         pred_df['pred_label'] = pred_df.apply(lambda row: 1 if(row.pred_prob_1 >= 0.5) else 0, axis = 1)
