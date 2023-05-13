@@ -29,9 +29,9 @@ from sklearn import preprocessing
 import time
 
 
-class ChenNetwork(nn.Module):
+class MtfP2ipNetwork(nn.Module):
     def __init__(self,hiddenSize=50,inSize=14,aux_oneDencodingsize=1024,numLayers=6,n_heads=2,layer_1_size=1024,seed=1,fullGPU=False,deviceType='cpu'):
-        super(ChenNetwork, self).__init__()
+        super(MtfP2ipNetwork, self).__init__()
         torch.manual_seed(seed)
         self.pooling = nn.MaxPool1d(3)
         self.activation = nn.LeakyReLU(0.3)
@@ -239,7 +239,7 @@ class ChenModel(GenericNetworkModel):
         
         
     def genModel(self):
-        self.net = ChenNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
+        self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
         # # ################################# for multi-gpu training -start ###############
         # # MUST SET ENV VARIABLE 'CUDA_VISIBLE_DEVICES' in the runtime environment where multigpu training will take place:
@@ -263,7 +263,7 @@ class ChenModel(GenericNetworkModel):
 
 
 #protein length should be at least 3**5 to survive 5 sets of maxpool(3) layers
-class ChenNetworkModule(GenericNetworkModule):
+class MtfP2ipNetworkModule(GenericNetworkModule):
     def __init__(self, hyperParams = {}, maxProteinLength=2000, hiddenSize=50,inSize=12, aux_oneDencodingsize=1024):
         GenericNetworkModule.__init__(self,hyperParams)
         self.maxProteinLength = self.hyperParams.get('maxProteinLength',maxProteinLength)

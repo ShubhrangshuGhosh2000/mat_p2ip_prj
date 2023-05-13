@@ -1,14 +1,4 @@
-#Based on paper Multifaceted protein–protein interaction prediction based on Siamese residual RCNN by Chen, Ju, Zhou, Chen, Zhang, Chang, Zaniolo, and Wang
-#https://github.com/muhaochen/seq_ppi
-
 import os, sys
-# # add parent and grandparent to path
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-# parentdir = os.path.dirname(currentdir)
-# sys.path.append(parentdir)
-# parentdir = os.path.dirname(parentdir)
-# sys.path.append(parentdir)
 
 from pathlib import Path
 path_root = Path(__file__).parents[3]  # upto 'codebase' folder
@@ -25,13 +15,12 @@ import torch.nn as nn
 import joblib
 import numpy as np
 from sklearn.decomposition import PCA
-from sklearn import preprocessing
 import time
 
 
-class ChenNetwork(nn.Module):
+class MtfP2ipNetwork(nn.Module):
     def __init__(self,hiddenSize=50,inSize=14,aux_oneDencodingsize=1024,numLayers=6,n_heads=2,layer_1_size=1024,seed=1,fullGPU=False,deviceType='cpu'):
-        super(ChenNetwork, self).__init__()
+        super(MtfP2ipNetwork, self).__init__()
         torch.manual_seed(seed)
         self.pooling = nn.MaxPool1d(3)
         self.activation = nn.LeakyReLU(0.3)
@@ -180,7 +169,7 @@ class ChenNetwork(nn.Module):
 
         # x = torch.mul(concat_protA,concat_protB)  # element wise multiplication
         x = torch.cat((concat_protA, other_man_1d_tensor, concat_protB), dim=1)  # side-by-side concatenation 
-        
+
         x = self.linear1(x)
         x = self.bn1(x)
         x = self.activation(x)
@@ -242,7 +231,7 @@ class ChenModel(GenericNetworkModel):
         
         
     def genModel(self):
-        self.net = ChenNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
+        self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
         #self.model = NetworkRunnerCollate(self.net,hyp=self.hyp)
         self.model = NetworkRunnerChen(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
@@ -254,7 +243,7 @@ class ChenModel(GenericNetworkModel):
 
 
 #protein length should be at least 3**5 to survive 5 sets of maxpool(3) layers
-class ChenNetworkModule(GenericNetworkModule):
+class MtfP2ipNetworkModule(GenericNetworkModule):
     def __init__(self, hyperParams = {}, maxProteinLength=2000, hiddenSize=50,inSize=12, aux_oneDencodingsize=1024):
         GenericNetworkModule.__init__(self,hyperParams)
         self.maxProteinLength = self.hyperParams.get('maxProteinLength',maxProteinLength)
@@ -370,21 +359,6 @@ class ChenNetworkModule(GenericNetworkModule):
             # print('aux_oneDencodingsize: ' + str(aux_1d_tensor.shape[0]))  # important print statement as its output will be used above
             self.oneDdataMatrix[self.dataLookup[item]] = aux_1d_tensor
         # end of for loop
-
-        # # # perform the full normalization of the auxiliary data matrix
-        # # print('perform the full normalization of the auxiliary data matrix')
-        # # aux_data_arr = self.oneDdataMatrix.numpy()
-        # # scaler = preprocessing.StandardScaler()
-        # # aux_data_arr_scaled = scaler.fit_transform(aux_data_arr)
-        # # self.oneDdataMatrix = torch.from_numpy(aux_data_arr_scaled)
-
-        # # perform the partial normalization (only tl part) of the auxiliary data matrix
-        # print('perform the partial normalization (only tl part) of the auxiliary data matrix')
-        # aux_data_arr = self.oneDdataMatrix.numpy()
-        # aux_tl_1d_data_arr = aux_data_arr[:, : tl_1d_embedd_tensor.shape[0]]
-        # aux_otherMan_1d_data_arr = aux_data_arr[:, tl_1d_embedd_tensor.shape[0]:]
-        # scaler = preprocessing.StandardScaler()
-        # aux_tl_1d_data_arr_scaled = scaler.fit_transform(aux_tl_1d_data_arr)
-        # aux_data_arr_scaled = np.concatenate((aux_tl_1d_data_arr_scaled, aux_otherMan_1d_data_arr), axis=1)
-        # self.oneDdataMatrix = torch.from_numpy(aux_data_arr_scaled)
         print('End of loadFeatureData() method')
+
+        for f in ./mtf_p2ip_origMan_auxTlOtherMan/*.py; do mv "$f" "$(echo "$f" | sed s/ChenNetwork/MtfP2ipNetwork/)"; done

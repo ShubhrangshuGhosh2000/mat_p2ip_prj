@@ -15,7 +15,7 @@ sys.path.insert(0, str(path_root))
 from utils import dl_reproducible_result_util
 # import PPIPUtils
 from utils import PPIPUtils
-from proc.mtf_p2ip.mtf_p2ip_origMan_auxTlOtherMan.mtf_ChenNetwork_origMan_auxTlOtherMan_held20 import ChenNetworkModule
+from proc.mtf_p2ip.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_held20 import MtfP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
 from proc.mtf_p2ip.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_held20
@@ -63,13 +63,13 @@ def RunAll():
         # if orgData:
         #     outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_OrigData.txt')
         #     trainSets, testSets, saves, pfs, folderName = loadLiADData(resultsFolderName)
-        #     runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs)
+        #     runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs)
 
         # if HumanRandom50:
         #     trainSets, testSets, saves, pfs, folderName = loadHumanRandom50(resultsFolderName)
         #     outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Rand50.txt')
-        #     # mtf_RunTrainTest_origMan_auxTlOtherMan_Rand50.runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
-        #     mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
+        #     # mtf_RunTrainTest_origMan_auxTlOtherMan_Rand50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+        #     mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
         #     mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.calcOverallScore_Pos50(outResultsName)
 
         # if HumanRandom20:
@@ -77,14 +77,14 @@ def RunAll():
         #     outResultsNameLst = []
         #     outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Rand20_1.txt'))
         #     outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Rand20_2.txt'))
-        #     runTest(ChenNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True, modelsLst=None,saveModels=convertToFolder(saves),predictionsFLst = pfs)
+        #     runTest(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True, modelsLst=None,saveModels=convertToFolder(saves),predictionsFLst = pfs)
         #     calcOverallScore_Pos20(outResultsNameLst)
 
         # if HumanHeldOut50:
         #     trainSets, testSets, saves, pfs, folderName = loadHumanHeldOut50(resultsFolderName)
         #     outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Held50.txt')
-        #     # pipr_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
-        #     mtf_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
+        #     # pipr_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+        #     mtf_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
         #     mtf_RunTrainTest_origMan_auxTlOtherMan_held50.calcOverallScore_Pos50(outResultsName)
 
         if HumanHeldOut20:
@@ -92,8 +92,8 @@ def RunAll():
             outResultsNameLst = []
             outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Held20_1.txt'))
             outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_Held20_2.txt'))
-            # mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(ChenNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
-            mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(ChenNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
+            # mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+            mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=None,predictionsFLst = pfs,startIdx=0)
             mtf_RunTrainTest_origMan_auxTlOtherMan_held20.calcOverallScore_Pos20(outResultsNameLst)
 
 

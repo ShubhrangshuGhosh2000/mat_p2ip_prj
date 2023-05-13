@@ -1,4 +1,14 @@
+#Based on paper Multifaceted protein–protein interaction prediction based on Siamese residual RCNN by Chen, Ju, Zhou, Chen, Zhang, Chang, Zaniolo, and Wang
+#https://github.com/muhaochen/seq_ppi
+
 import os, sys
+# # add parent and grandparent to path
+# currentdir = os.path.dirname(os.path.realpath(__file__))
+# sys.path.append(currentdir)
+# parentdir = os.path.dirname(currentdir)
+# sys.path.append(parentdir)
+# parentdir = os.path.dirname(parentdir)
+# sys.path.append(parentdir)
 
 from pathlib import Path
 path_root = Path(__file__).parents[3]  # upto 'codebase' folder
@@ -15,6 +25,7 @@ import torch.nn as nn
 import joblib
 import numpy as np
 from sklearn.decomposition import PCA
+from sklearn import preprocessing
 import time
 
 
@@ -169,7 +180,7 @@ class MtfP2ipNetwork(nn.Module):
 
         # x = torch.mul(concat_protA,concat_protB)  # element wise multiplication
         x = torch.cat((concat_protA, other_man_1d_tensor, concat_protB), dim=1)  # side-by-side concatenation 
-
+        
         x = self.linear1(x)
         x = self.bn1(x)
         x = self.activation(x)
@@ -359,4 +370,21 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
             # print('aux_oneDencodingsize: ' + str(aux_1d_tensor.shape[0]))  # important print statement as its output will be used above
             self.oneDdataMatrix[self.dataLookup[item]] = aux_1d_tensor
         # end of for loop
+
+        # # # perform the full normalization of the auxiliary data matrix
+        # # print('perform the full normalization of the auxiliary data matrix')
+        # # aux_data_arr = self.oneDdataMatrix.numpy()
+        # # scaler = preprocessing.StandardScaler()
+        # # aux_data_arr_scaled = scaler.fit_transform(aux_data_arr)
+        # # self.oneDdataMatrix = torch.from_numpy(aux_data_arr_scaled)
+
+        # # perform the partial normalization (only tl part) of the auxiliary data matrix
+        # print('perform the partial normalization (only tl part) of the auxiliary data matrix')
+        # aux_data_arr = self.oneDdataMatrix.numpy()
+        # aux_tl_1d_data_arr = aux_data_arr[:, : tl_1d_embedd_tensor.shape[0]]
+        # aux_otherMan_1d_data_arr = aux_data_arr[:, tl_1d_embedd_tensor.shape[0]:]
+        # scaler = preprocessing.StandardScaler()
+        # aux_tl_1d_data_arr_scaled = scaler.fit_transform(aux_tl_1d_data_arr)
+        # aux_data_arr_scaled = np.concatenate((aux_tl_1d_data_arr_scaled, aux_otherMan_1d_data_arr), axis=1)
+        # self.oneDdataMatrix = torch.from_numpy(aux_data_arr_scaled)
         print('End of loadFeatureData() method')

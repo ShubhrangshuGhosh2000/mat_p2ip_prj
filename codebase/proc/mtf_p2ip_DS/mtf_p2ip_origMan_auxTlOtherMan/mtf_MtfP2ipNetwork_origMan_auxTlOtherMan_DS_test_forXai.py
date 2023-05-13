@@ -17,9 +17,9 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 from utils.NetworkRunnerCollate import NetworkRunnerCollate
-from proc.mtf_p2ip.GenericNetworkModel_mtf import GenericNetworkModel
-from proc.mtf_p2ip.GenericNetworkModule_mtf import GenericNetworkModule
-from proc.mtf_p2ip.positional_encoder_mtf import PositionalEncoder
+from proc.mtf_p2ip_DS.GenericNetworkModel_mtf import GenericNetworkModel
+from proc.mtf_p2ip_DS.GenericNetworkModule_mtf import GenericNetworkModule
+from proc.mtf_p2ip_DS.positional_encoder_mtf import PositionalEncoder
 import torch
 import torch.nn as nn
 import joblib
@@ -29,9 +29,9 @@ from sklearn import preprocessing
 import time
 
 
-class ChenNetwork(nn.Module):
+class MtfP2ipNetwork(nn.Module):
     def __init__(self,hiddenSize=50,inSize=14,aux_oneDencodingsize=1024,numLayers=6,n_heads=2,layer_1_size=1024,seed=1,fullGPU=False,deviceType='cpu'):
-        super(ChenNetwork, self).__init__()
+        super(MtfP2ipNetwork, self).__init__()
         torch.manual_seed(seed)
         self.pooling = nn.MaxPool1d(3)
         self.activation = nn.LeakyReLU(0.3)
@@ -61,7 +61,7 @@ class ChenNetwork(nn.Module):
                 self.convLst.append(nn.Conv1d(hiddenSize*(i+1),hiddenSize,3))
                 # self.SEQLst.append(nn.GRU(input_size=hiddenSize*3,hidden_size=hiddenSize,bidirectional=True,batch_first=True))
                 self.PosEncLst.append(PositionalEncoder(d_model= hiddenSize*(i+1), dropout=dropout_pos_enc, max_seq_len=700, batch_first=True))
-                self.SEQLst.append(nn.TransformerEncoder(encoder_layer=nn.TransformerEncoderLayer(d_model=hiddenSize*(i+1), nhead=self.n_heads, dim_feedforward = hiddenSize, batch_first=True)
+                self.SEQLst.append(nn.TransformerEncoder(encoder_layer=nn.TransformerEncoderLayer(d_model=hiddenSize*(i+1), nhead=n_heads, dim_feedforward = hiddenSize, batch_first=True)
                                                         , num_layers=n_encoder_layers
                                                         , norm=None))
             elif(i == self.numLayers -1):  # last layer: only conv layer and no trx layer
@@ -97,8 +97,8 @@ class ChenNetwork(nn.Module):
         self.bn2 = nn.BatchNorm1d(layer_2_size)
         self.bn3 = nn.BatchNorm1d(layer_3_size)
         
-    def forward(self,x):
-        (protA, protB, auxProtA, auxProtB) = x
+    def forward(self, protA, protB, auxProtA, auxProtB):
+        # (protA, protB, auxProtA, auxProtB) = x
         protLst = []
         for item in [protA, protB]: #run each protein through gru/pooling layers
             for i in range(0,self.numLayers):
@@ -242,9 +242,21 @@ class ChenModel(GenericNetworkModel):
         
         
     def genModel(self):
-        self.net = ChenNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
+        self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
+        # # ################################# for multi-gpu training -start ###############
+        # # MUST SET ENV VARIABLE 'CUDA_VISIBLE_DEVICES' in the runtime environment where multigpu training will take place:
+        # # export CUDA_VISIBLE_DEVICES=0,1
+        # # echo $CUDA_VISIBLE_DEVICES
+        # if self.fullGPU: # push everything to gpu
+        #     self.net= nn.DataParallel(self.net)
+        #     self.net.to(torch.device(self.deviceType))
+        # # ################################# for multi-gpu training -end ###############
+
         #self.model = NetworkRunnerCollate(self.net,hyp=self.hyp)
+        # ################################# only for testing (when model is already given) -start ###############
+        self.skipScheduler = self.hyp.get('skipScheduler', 30)
+        # ################################# only for testing (when model is already given) -end ###############
         self.model = NetworkRunnerChen(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
 
     #train network
@@ -254,7 +266,7 @@ class ChenModel(GenericNetworkModel):
 
 
 #protein length should be at least 3**5 to survive 5 sets of maxpool(3) layers
-class ChenNetworkModule(GenericNetworkModule):
+class MtfP2ipNetworkModule(GenericNetworkModule):
     def __init__(self, hyperParams = {}, maxProteinLength=2000, hiddenSize=50,inSize=12, aux_oneDencodingsize=1024):
         GenericNetworkModule.__init__(self,hyperParams)
         self.maxProteinLength = self.hyperParams.get('maxProteinLength',maxProteinLength)
@@ -265,13 +277,16 @@ class ChenNetworkModule(GenericNetworkModule):
     def genModel(self):
         self.model = ChenModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
 
-    def loadFeatureData(self,featureFolder):
+
+    def loadFeatureData_DS(self,featureFolder, spec_type=None):
+        print('Inside the loadFeatureData_DS() method - Start')
+        print('\n########## spec_type: ' + str(spec_type))
         dataLookupSkip, dataMatrixSkip = self.loadEncodingFileWithPadding(featureFolder+'SkipGramAA7H5.encode',self.maxProteinLength)
         # dataLookupOneHot, dataMatrixOneHot = self.loadEncodingFileWithPadding(featureFolder+'OneHotEncoding7.encode',self.maxProteinLength)
         dataLookupLabelEncode, dataMatrixLabelEncode = self.loadLabelEncodingFileWithPadding(featureFolder+'LabelEncoding.encode',self.maxProteinLength)
         print("loading pssm_dict ...")
         # load the pssm values stored in pssm_dict
-        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/benchmark_feat/PPI_Datasets/Human2021/', 'pssm_dict.pkl')
+        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS/benchmark_feat', spec_type, 'pssm_dict.pkl')
         pssm_dict = joblib.load(pssm_dict_pkl_path)
         # trimming pssm_dict so that it occupies less memory (RAM)
         for prot_id in list(pssm_dict.keys()):
@@ -279,7 +294,7 @@ class ChenNetworkModule(GenericNetworkModule):
         print("loaded pssm_dict ...\n")
         print("loading blosum62_dict ...")
         # load the pssm values stored in blosum62_dict
-        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/benchmark_feat/PPI_Datasets/Human2021/', 'blosum62_dict.pkl')
+        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS/benchmark_feat', spec_type, 'blosum62_dict.pkl')
         blosum62_dict = joblib.load(blosum62_dict_pkl_path)
         # trimming blosum62_dict so that it occupies less memory (RAM)
         for prot_id in list(blosum62_dict.keys()):
@@ -287,31 +302,31 @@ class ChenNetworkModule(GenericNetworkModule):
         print("loaded blosum62_dict ...\n")
 
         print('\n#### loading tl-based 1d embeddings ####')
-        print("\nloading human_seq_feat_dict ...")
-        # load tl-based 1d embeddings stored in human_seq_feat_dict
-        human_seq_feat_dict_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data', 'human_seq_1d_feat_dict_prot_t5_xl_uniref50.pkl')
-        human_seq_feat_dict = joblib.load(human_seq_feat_dict_path)
-        # trimming human_seq_feat_dict so that it occupies less memory (RAM)
-        for prot_id in list(human_seq_feat_dict.keys()):
-            human_seq_feat_dict[prot_id]['seq'] = human_seq_feat_dict[prot_id]['seq_2d_feat'] = None
-        print("loaded human_seq_feat_dict ...")
+        print("\nloading DS_seq_feat_dict ...")
+        # load tl-based 1d embeddings stored in DS_seq_feat_dict
+        DS_seq_feat_dict_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS', 'DS_seq_feat_dict_prot_t5_xl_uniref50_' + spec_type + '.pkl')
+        DS_seq_feat_dict = joblib.load(DS_seq_feat_dict_path)
+        # trimming DS_seq_feat_dict so that it occupies less memory (RAM)
+        for prot_id in list(DS_seq_feat_dict.keys()):
+            DS_seq_feat_dict[prot_id]['seq'] = DS_seq_feat_dict[prot_id]['seq_2d_feat'] = None
+        print("loaded DS_seq_feat_dict ...")
 
         print('\n#### loading other manual 1d embeddings ####')
-        print("loading human_seq_manual_feat_dict ...")
-        human_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[5], 'dataset/preproc_data','human_seq_manual_feat_dict.pkl'))
-        # trimming human_seq_manual_feat_dict so that it occupies less memory (RAM)
-        for prot_id in list(human_seq_manual_feat_dict.keys()):
-            human_seq_manual_feat_dict[prot_id]['seq'] = None
-        print("loaded human_seq_manual_feat_dict ...")
+        print("loading DS_seq_manual_feat_dict ...")
+        DS_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS','DS_seq_manual_feat_dict_' + spec_type + '.pkl'))
+        # trimming DS_seq_manual_feat_dict so that it occupies less memory (RAM)
+        for prot_id in list(DS_seq_manual_feat_dict.keys()):
+            DS_seq_manual_feat_dict[prot_id]['seq'] = None
+        print("loaded DS_seq_manual_feat_dict ...")
 
         # allProteinsSet = set(list(dataLookupSkip.keys())) & set(list(dataLookupOneHot.keys()))
         allProteinsSet = set(list(dataLookupSkip.keys())) & set(list(dataLookupLabelEncode.keys()))
-        allProteinsList = list(human_seq_feat_dict.keys())
+        allProteinsList = list(DS_seq_feat_dict.keys())
 
         # self.encodingSize = self.inSize = dataMatrixSkip.shape[1] + dataMatrixOneHot.shape[1]
         self.encodingSize = self.inSize = dataMatrixSkip.shape[1] + dataMatrixLabelEncode.shape[1] + \
                                            pssm_dict[str(allProteinsList[0])]['pssm_val'].shape[1] + blosum62_dict[str(allProteinsList[0])]['blosum62_val'].shape[1]
-        # self.aux_oneDencodingsize = len(human_seq_feat_dict[int(allProteinsList[0])]['seq_feat'])
+        # self.aux_oneDencodingsize = len(DS_seq_feat_dict[int(allProteinsList[0])]['seq_feat'])
         self.aux_oneDencodingsize = 2242  # 2878  # at first run, it will fail but after observing 'aux_oneDencodingsize' print in the for loop below, its
                                           # proper value can be updated here, so that the rerun would be error free.
 
@@ -352,9 +367,9 @@ class ChenNetworkModule(GenericNetworkModule):
                             (skipData.shape[1] + labelEncodeData.shape[1] + pssm_mat_ncols):(skipData.shape[1] + labelEncodeData.shape[1] + pssm_mat_ncols + blosum62_mat_ncols)] = cur_blosum62_mat
 
             # extract tl-based 1d embeddings
-            tl_1d_embedd_tensor = torch.from_numpy(human_seq_feat_dict[int(item)]['seq_feat'])
+            tl_1d_embedd_tensor = torch.from_numpy(DS_seq_feat_dict[item]['seq_feat'])
             # extract other manual 1d embeddings 
-            seq_manual_feat_dict = human_seq_manual_feat_dict[int(item)]['seq_manual_feat_dict']
+            seq_manual_feat_dict = DS_seq_manual_feat_dict[item]['seq_manual_feat_dict']
             other_man_feat_lst = seq_manual_feat_dict['AC30'] + seq_manual_feat_dict['PSAAC15'] + seq_manual_feat_dict['ConjointTriad'] \
                                 + seq_manual_feat_dict['LD10_CTD_ConjointTriad_C'] + seq_manual_feat_dict['LD10_CTD_ConjointTriad_T'] \
                                 + seq_manual_feat_dict['LD10_CTD_ConjointTriad_D'] \
@@ -387,4 +402,4 @@ class ChenNetworkModule(GenericNetworkModule):
         # aux_tl_1d_data_arr_scaled = scaler.fit_transform(aux_tl_1d_data_arr)
         # aux_data_arr_scaled = np.concatenate((aux_tl_1d_data_arr_scaled, aux_otherMan_1d_data_arr), axis=1)
         # self.oneDdataMatrix = torch.from_numpy(aux_data_arr_scaled)
-        print('End of loadFeatureData() method')
+        print('Inside the loadFeatureData_DS() method - End')

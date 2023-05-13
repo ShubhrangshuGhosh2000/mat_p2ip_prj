@@ -18,7 +18,7 @@ sys.path.insert(0, str(path_root))
 from utils import dl_reproducible_result_util
 # import PPIPUtils
 from utils import PPIPUtils
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_ChenNetwork_origMan_auxTlOtherMan_DS_test import ChenNetworkModule
+from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_DS_test import MtfP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
 from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_DS
@@ -61,8 +61,8 @@ def RunAll(spec_type = 'human'):
     # specifying human_full model location
     human_full_model_loc = os.path.join(root_path, 'dataset/proc_data_DS/mtf_res_origMan_auxTlOtherMan_human/DS_human_full.out')
     loads = [human_full_model_loc]
-    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS(ChenNetworkModule, outResultsName,trainSets,testSets,featureFolder,hyp,resultsAppend=False,saveModels=None,predictionsFLst = pfs,startIdx=0,loads=loads,spec_type=spec_type)
-    # mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS_xai(ChenNetworkModule,testSets,featureFolder,hyp,startIdx=0,loads=loads,spec_type=spec_type,resultsFolderName=resultsFolderName)
+    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,featureFolder,hyp,resultsAppend=False,saveModels=None,predictionsFLst = pfs,startIdx=0,loads=loads,spec_type=spec_type)
+    # mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS_xai(MtfP2ipNetworkModule,testSets,featureFolder,hyp,startIdx=0,loads=loads,spec_type=spec_type,resultsFolderName=resultsFolderName)
 
 
 def genSequenceFeatures(spec_type = 'human'):

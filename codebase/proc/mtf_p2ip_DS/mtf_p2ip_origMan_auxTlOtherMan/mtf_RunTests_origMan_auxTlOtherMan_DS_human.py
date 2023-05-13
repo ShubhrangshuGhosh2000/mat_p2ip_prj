@@ -18,7 +18,7 @@ sys.path.insert(0, str(path_root))
 from utils import dl_reproducible_result_util
 # import PPIPUtils
 from utils import PPIPUtils
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_ChenNetwork_origMan_auxTlOtherMan_DS_train import ChenNetworkModule
+from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_DS_train import MtfP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
 from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_DS
@@ -61,7 +61,7 @@ def RunAll(spec_type = 'human'):
     print('hyp: ' + str(hyp))
 
     trainSets, testSets, saves, pfs, featureFolder = loadDscriptData_human_full(resultsFolderName)
-    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTrainOnly_DS(ChenNetworkModule, trainSets, featureFolder, hyp, saves, spec_type)
+    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTrainOnly_DS(MtfP2ipNetworkModule, trainSets, featureFolder, hyp, saves, spec_type)
 
 
 def genSequenceFeatures(spec_type = 'human'):

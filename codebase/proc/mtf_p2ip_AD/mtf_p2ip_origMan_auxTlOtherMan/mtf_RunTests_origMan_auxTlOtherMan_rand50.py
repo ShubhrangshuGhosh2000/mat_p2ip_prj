@@ -18,7 +18,7 @@ sys.path.insert(0, str(path_root))
 from utils import dl_reproducible_result_util
 # import PPIPUtils
 from utils import PPIPUtils
-from proc.mtf_p2ip_AD.mtf_p2ip_origMan_auxTlOtherMan.mtf_ChenNetwork_origMan_auxTlOtherMan_rand50 import ChenNetworkModule
+from proc.mtf_p2ip_AD.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_rand50 import MtfP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
 from proc.mtf_p2ip_AD.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_rand50
@@ -90,7 +90,7 @@ def RunAll(findBestHparam=False):
             outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_tune_' + str(itr) + '.txt')
             if(not findBestHparam):
                 trainSets, testSets, saves, pfs, folderName = loadLiADData(resultsFolderName + str('/'))
-                mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(ChenNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
+                mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
                 mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.calcOverallScore_Pos50(outResultsName)
             elif(findBestHparam):
                 outResultCsvFileName = outResultsName.replace('.txt', '.csv')
