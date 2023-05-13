@@ -3,7 +3,7 @@ import pandas as pd
 import glob
 
 from pathlib import Path
-path_root = Path(__file__).parents[4]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 

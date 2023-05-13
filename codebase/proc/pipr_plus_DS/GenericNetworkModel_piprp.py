@@ -3,12 +3,12 @@ import sys
 # sys.path.append(currentdir)
 
 from pathlib import Path
-path_root = Path(__file__).parents[1]  # upto 'codebase' folder
+path_root = Path(__file__).parents[2]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 # from utils.SimpleTorchDictionaryDataset import SimpleTorchDictionaryDataset
-from proc.benchmark_algo.pipr_plus_DS.SimpleTorchDictionaryDataset_piprp import SimpleTorchDictionaryDataset
+from proc.pipr_plus_DS.SimpleTorchDictionaryDataset_piprp import SimpleTorchDictionaryDataset
 
 #designed for usage with neural network models using dictionary datasets
 class GenericNetworkModel(object):

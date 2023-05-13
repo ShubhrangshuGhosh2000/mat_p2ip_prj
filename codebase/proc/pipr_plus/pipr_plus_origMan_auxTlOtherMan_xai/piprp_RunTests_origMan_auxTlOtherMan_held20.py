@@ -8,17 +8,17 @@ from sklearn.preprocessing import StandardScaler
 # # currentDir = currentdir + '/'
 
 from pathlib import Path
-path_root = Path(__file__).parents[4]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 from utils import dl_reproducible_result_util
 # import PPIPUtils
 from utils import PPIPUtils
-from proc.benchmark_algo.pipr_plus.pipr_plus_origMan_auxTlOtherMan_xai.piprp_ChenNetwork_origMan_auxTlOtherMan_held20 import ChenNetworkModule
+from proc.pipr_plus.pipr_plus_origMan_auxTlOtherMan_xai.piprp_ChenNetwork_origMan_auxTlOtherMan_held20 import ChenNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
-from proc.benchmark_algo.pipr_plus.pipr_plus_origMan_auxTlOtherMan_xai import piprp_RunTrainTest_origMan_auxTlOtherMan_held20
+from proc.pipr_plus.pipr_plus_origMan_auxTlOtherMan_xai import piprp_RunTrainTest_origMan_auxTlOtherMan_held20
 
 
 # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')

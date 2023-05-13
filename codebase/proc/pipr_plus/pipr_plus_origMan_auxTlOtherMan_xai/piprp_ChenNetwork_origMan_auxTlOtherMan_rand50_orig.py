@@ -11,15 +11,15 @@ import os, sys
 # sys.path.append(parentdir)
 
 from pathlib import Path
-path_root = Path(__file__).parents[4]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
 from utils import dl_reproducible_result_util
 from utils.NetworkRunnerCollate import NetworkRunnerCollate
-from proc.benchmark_algo.pipr_plus.GenericNetworkModel_piprp import GenericNetworkModel
-from proc.benchmark_algo.pipr_plus.GenericNetworkModule_piprp import GenericNetworkModule
-from proc.benchmark_algo.pipr_plus.positional_encoder_piprp import PositionalEncoder
+from proc.pipr_plus.GenericNetworkModel_piprp import GenericNetworkModel
+from proc.pipr_plus.GenericNetworkModule_piprp import GenericNetworkModule
+from proc.pipr_plus.positional_encoder_piprp import PositionalEncoder
 import torch
 import torch.nn as nn
 import joblib
