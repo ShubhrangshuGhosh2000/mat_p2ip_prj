@@ -61,7 +61,7 @@ def prepare_manual_feat_for_human_seq(root_path='./'):
 
 if __name__ == '__main__':
     root_path = os.path.join('/project/root/directory/path/here')
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
+    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
 
     # ### First remove all the references of the protein id = 7273 from everywhere (allSeqs.fasta, training sets,
     #  test sets, etc.). You can call remove_7273() method from preproc_util.py file.

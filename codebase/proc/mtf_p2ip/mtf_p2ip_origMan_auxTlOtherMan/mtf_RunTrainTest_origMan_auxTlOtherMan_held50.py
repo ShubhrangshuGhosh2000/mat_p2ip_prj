@@ -1,15 +1,12 @@
 import sys, os
 import pandas as pd
-import glob
 
 from pathlib import Path
 path_root = Path(__file__).parents[3]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-
 import numpy as np
-# import PPIPUtils
 from utils import PPIPUtils
 import time
 
@@ -33,10 +30,8 @@ def writeScore(predictions,classes, fOut, predictionsFName=None, thresholds=[0.0
         print(line)
     
     fOut.write('\n')
-    
     if predictionsFName is not None:
         writePredictions(predictionsFName,finalPredictions,finalClasses)
-
 
 
 #modelClass - the class of the model to use
@@ -84,7 +79,6 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
         model.loadFeatureData(featureFolder)
     
     for i in range(startIdx,len(testSets)):
-        # for i in range(2,len(testSets)):  # ############ TEMP CODE
         model.batchIdx = i
 
         #create model, passing training data, testing data, and hyperparameters
@@ -98,7 +92,6 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
                     model.saveModelToFile(saveModels[i])
             else:
                 model.loadModelFromFile(loads[i])
-                #model.setScaleFeatures(trainSets[i])
 
             preds, classes = model.predictPairs(testSets[i])
             if keepModels:
@@ -108,7 +101,6 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
             preds, classes = model.predictPairs(testSets[i],modelsLst[i])
             if keepModels:
                 trainedModelsLst.append(modelsLst[i])
-        
         
         print('pred')
         #compute result metrics, such as Max Accuracy, Precision/Recall @ Max Accuracy, Average Precition, and Max Precition @ k
@@ -155,15 +147,10 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
         outResults.write('Time: '+str(time.time()-t))
         outResults.close()
     return (totalPredictions, totalClasses,model,trainedModelsLst)
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
 #Same as runTest, but takes a list of list of tests, and a list of filenames, allowing running multiple test sets and storing to multiple files
 def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder,hyperParams = {},predictionsNameLst=None,loadedModel= None,modelsLst = None,thresholds = [0.01,0.03,0.05,0.1,0.25,0.5,1],resultsAppend=False,keepModels=False,saveModels=None,predictionsFLst = None,startIdx=0,loads=None):
     #record total time for computation
@@ -283,99 +270,6 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
             #output the total time to run this algorithm
             outResults[testIdx].write('Time: '+str(time.time()-t))
             outResults[testIdx].close()
-    return (totalPredictions, totalClasses,model,trainedModelsLst)
-
-
-
-#Same as runTest, but takes a list of list of tests, and a list of filenames, allowing running multiple test sets and storing to multiple files
-def runTestPairwiseFoldersLst(modelClass, outResultsName,trainSets,testSets,featureFolderLst,hyperParams = {},predictionsName=None,loadedModel= None,modelsLst = None,thresholds = [0.01,0.03,0.05,0.1,0.25,0.5,1],resultsAppend=False,keepModels=False,saveModels=None,predictionsFLst = None,startIdx=0,loads=None):
-            
-    #record total time for computation
-    t = time.time()
-    for i in range(0,len(featureFolderLst)):
-        if featureFolderLst[i][-1] != '/':
-            featureFolderLst[i] += '/'
-    
-    
-    #open file to write results to for each fold/split
-    if resultsAppend and outResultsName:
-        outResults = open(outResultsName,'a')
-    elif outResultsName:
-        outResults = open(outResultsName,'w')
-    #keep list of predictions/classes per fold
-    totalPredictions = []
-    totalClasses = []
-    trainedModelsLst = []
-
-    for i in range(0,startIdx):
-        totalPredictions.append([])
-        totalClasses.append([])
-        trainedModelsLst.append([])
-    
-    #create the model once, loading all the features and hyperparameters as necessary
-    if loadedModel is not None:
-        model = loadedModel
-    else:
-        model = modelClass(hyperParams)
-    
-    for i in range(startIdx,len(featureFolderLst)):
-        #need to use new folder per test
-        model.loadFeatureData(featureFolderLst[i])
-        model.batchIdx = i
-        
-        #create model, passing training data, testing data, and hyperparameters
-        if modelsLst is None:
-            model.batchIdx = i
-            if loads is None or loads[i] is None:
-                #run training and testing, get results
-                model.train(trainSets[i] if trainSets is not None else None)
-                if saveModels is not None:
-                    print('save')
-                    model.saveModelToFile(saveModels[i])
-            else:
-                model.loadModelFromFile(loads[i])
-                #model.setScaleFeatures(trainSets[i])
-
-            preds, classes = model.predictPairs(testSets[i] if testSets is not None else None)
-            if keepModels:
-                trainedModelsLst.append(model.getModel())    
-        else:
-            #if we are given a model, skip the training and use it for testing
-            model.setModel(modelsLst[i])
-            preds, classes = model.predictPairs(testSets[i] if testSets is not None else None)
-            if keepModels:
-                trainedModelsLst.append(modelsLst[i])
-        
-        print('pred')
-        #compute result metrics, such as Max Accuracy, Precision/Recall @ Max Accuracy, Average Precition, and Max Precition @ k
-        results = PPIPUtils.calcScores(classes,preds[:,1],thresholds)
-        #format the scoring results, with line for title
-        lst = PPIPUtils.formatScores(results,'Fold '+str(i))
-        #write formatted results to file, and print result to command line
-        if outResultsName:
-            for line in lst:
-                outResults.write('\t'.join(str(s) for s in line) + '\n')
-                print(line)
-            outResults.write('\n')
-        else:
-            for line in lst:
-                print(line)
-        print(time.time()-t)
-        
-        #append results to total results for overall scoring
-        totalPredictions.append(preds[:,1])
-        totalClasses.append(classes)
-
-        if predictionsFLst is not None:
-            writePredictions(predictionsFLst[i],totalPredictions[i],totalClasses[i])
-            
-    if not resultsAppend and predictionsName is not None and outResultsName: #not appending. calculate total results
-        writeScore(totalPredictions,totalClasses,outResults,predictionsName,thresholds)
-    
-    #output the total time to run this algorithm
-    if outResultsName:
-        outResults.write('Time: '+str(time.time()-t))
-        outResults.close()
     return (totalPredictions, totalClasses,model,trainedModelsLst)
 
 

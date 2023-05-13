@@ -9,7 +9,7 @@ sys.path.insert(0, str(path_root))
 
 import numpy as np
 
-currentDir = os.path.join(path_root, 'dataset/preproc_data/benchmark_feat/')
+currentDir = os.path.join(path_root, 'dataset/preproc_data/derived_feat/')
 
 #if dirLst, just get directory names, not data sets.  Used for pairwise predictors
 def loadHumanRandom50(directory,augment = False,dirLst = False):
@@ -27,7 +27,7 @@ def loadHumanRandom50(directory,augment = False,dirLst = False):
     if augment:
         trainSets, testSets = augmentAll(trainSets,testSets)
     # featDir = 'PPI_Datasets/Human2021/'
-    featDir = os.path.join(path_root,'dataset/preproc_data/benchmark_feat/PPI_Datasets/Human2021/')
+    featDir = os.path.join(path_root,'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/')
     if dirLst:
         featDir = []
         for i in range(0,5):
@@ -128,7 +128,7 @@ def loadHumanHeldOut20(directory,augment = False, dirLst = False):
 
 
 def loadDscriptData_human_full(resultsFolderName):
-    featureFolder = os.path.join(path_root, 'dataset/preproc_data_DS/benchmark_feat/human/')
+    featureFolder = os.path.join(path_root, 'dataset/preproc_data_DS/derived_feat/human/')
     trainSets  = []
     testSets = []
     saves = []
@@ -140,7 +140,7 @@ def loadDscriptData_human_full(resultsFolderName):
 
 
 def loadDscriptData(resultsFolderName, spec_type = 'human'):
-    featureFolder = os.path.join(path_root, 'dataset/preproc_data_DS/benchmark_feat/' + spec_type + '/')
+    featureFolder = os.path.join(path_root, 'dataset/preproc_data_DS/derived_feat/' + spec_type + '/')
     trainSets  = []
     testSets = []
     saves = []
@@ -152,8 +152,8 @@ def loadDscriptData(resultsFolderName, spec_type = 'human'):
 
 
 def loadLiADData(directory):
-    currentDir = os.path.join(path_root, 'dataset/preproc_data_AD/benchmark_feat/')
-    # currentDir = os.path.join(path_root, 'dataset/preproc_data/benchmark_feat/')
+    currentDir = os.path.join(path_root, 'dataset/preproc_data_AD/derived_feat/')
+    # currentDir = os.path.join(path_root, 'dataset/preproc_data/derived_feat/')
 
     trainSets = PPIPUtils.parseTSV(currentDir+'PPI_Datasets/Li_AD/li_AD_train_idx.tsv','int')
     testSets = PPIPUtils.parseTSV(currentDir+'PPI_Datasets/Li_AD/li_AD_test_idx.tsv','int')
@@ -189,4 +189,11 @@ def augment(data):
     #remove duplicates, in case of (x,x) pairs, or pairs (x,y) and (y,x) being in the original data
     curData = np.unique(curData,axis=0)
     return curData
+
+def convertToFolder(lst):
+    lst2 = []
+    for item in lst:
+        item = '.'.join(item.split('.')[:-1]) #remove suffix
+        lst2.append(item + '/')
+    return lst2
 

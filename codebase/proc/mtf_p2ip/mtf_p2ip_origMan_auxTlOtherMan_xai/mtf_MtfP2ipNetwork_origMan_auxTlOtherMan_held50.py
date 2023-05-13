@@ -280,7 +280,7 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
         dataLookupLabelEncode, dataMatrixLabelEncode = self.loadLabelEncodingFileWithPadding(featureFolder+'LabelEncoding.encode',self.maxProteinLength)
         print("loading pssm_dict ...")
         # load the pssm values stored in pssm_dict
-        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/benchmark_feat/PPI_Datasets/Human2021/', 'pssm_dict.pkl')
+        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'pssm_dict.pkl')
         pssm_dict = joblib.load(pssm_dict_pkl_path)
         # trimming pssm_dict so that it occupies less memory (RAM)
         for prot_id in list(pssm_dict.keys()):
@@ -288,7 +288,7 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
         print("loaded pssm_dict ...\n")
         print("loading blosum62_dict ...")
         # load the pssm values stored in blosum62_dict
-        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/benchmark_feat/PPI_Datasets/Human2021/', 'blosum62_dict.pkl')
+        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'blosum62_dict.pkl')
         blosum62_dict = joblib.load(blosum62_dict_pkl_path)
         # trimming blosum62_dict so that it occupies less memory (RAM)
         for prot_id in list(blosum62_dict.keys()):

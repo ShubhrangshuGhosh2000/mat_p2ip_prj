@@ -12,8 +12,8 @@ from utils.ProjectDataLoader import *
 
 # root_path = os.path.join('/home/Shubh_Working_Ubuntu/Workspaces/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 # root_path = os.path.join('/home/rs/19CS92W02/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
-resultsFolderName = os.path.join(root_path, 'dataset/proc_data/benchmark_res/mtf_res/mtf_res_origMan_auxTlOtherMan_xai/')
+root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
+resultsFolderName = os.path.join(root_path, 'dataset/proc_data/mtf_res/mtf_res_origMan_auxTlOtherMan_xai/')
 
 
 def calc_score_for_HumanRandom50():
