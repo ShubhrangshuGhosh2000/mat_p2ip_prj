@@ -1,5 +1,5 @@
-#Based on paper Multifaceted protein–protein interaction prediction based on Siamese residual RCNN by Chen, Ju, Zhou, Chen, Zhang, Chang, Zaniolo, and Wang
-#https://github.com/muhaochen/seq_ppi
+#Based on paper Multifaceted protein–protein interaction prediction based on Siamese residual RCNN by MtfP2ip, Ju, Zhou, MtfP2ip, Zhang, Chang, Zaniolo, and Wang
+#https://github.com/muhaomtfP2ip/seq_ppi
 
 import os, sys
 # # add parent and grandparent to path
@@ -214,7 +214,7 @@ class MtfP2ipNetwork(nn.Module):
         return X_transform
 
     
-class NetworkRunnerChen(NetworkRunnerCollate):
+class NetworkRunnerMtfP2ip(NetworkRunnerCollate):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='Adam',weight_decay=0,sched_factor=0.1,sched_patience=1,sched_cooldown=0,sched_thresh=1e-2,predictSoftmax=True,hyp={},skipScheduler=30):
         NetworkRunnerCollate.__init__(self,net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax,hyp)
         self.skipScheduler = hyp.get('skipScheduler',skipScheduler)
@@ -224,7 +224,7 @@ class NetworkRunnerChen(NetworkRunnerCollate):
         if self.scheduler is not None and self.epoch > self.skipScheduler:
             self.scheduler.step(values)
 
-class ChenModel(GenericNetworkModel):
+class MtfP2ipModel(GenericNetworkModel):
     def __init__(self,hyp={},inSize=12,aux_oneDencodingsize=1024,hiddenSize=50,numLayers=6,fullGPU=False,deviceType=None,numEpochs=100,batchSize=256,lr=5e-4,minLr=1e-4,schedFactor=.5,schedPatience=3,schedThresh=1e-2,threshSchedMode='abs'):
         GenericNetworkModel.__init__(self,hyp=hyp,fullGPU=fullGPU,deviceType=deviceType,numEpochs=numEpochs,batchSize=batchSize,lr=lr,minLr=minLr,schedFactor=schedFactor,schedPatience=schedPatience,schedThresh=schedThresh)
 
@@ -245,7 +245,7 @@ class ChenModel(GenericNetworkModel):
         self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
         #self.model = NetworkRunnerCollate(self.net,hyp=self.hyp)
-        self.model = NetworkRunnerChen(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
+        self.model = NetworkRunnerMtfP2ip(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
 
     #train network
     def fit(self,pairLst,classes,dataMatrix,oneDdataMatrix,validationPairs=None, validationClasses=None):
@@ -263,7 +263,7 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
         self.hiddenSize = self.hyperParams.get('hiddenSize',hiddenSize)
         
     def genModel(self):
-        self.model = ChenModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
+        self.model = MtfP2ipModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
 
     def loadFeatureData(self,featureFolder):
         dataLookupSkip, dataMatrixSkip = self.loadEncodingFileWithPadding(featureFolder+'SkipGramAA7H5.encode',self.maxProteinLength)

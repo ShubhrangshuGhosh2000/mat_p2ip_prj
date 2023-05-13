@@ -25,7 +25,7 @@ from proc.mtf_p2ip.mtf_p2ip_origMan_auxTlOtherMan_xai import mtf_RunTrainTest_or
 root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/only_seq_prj_v1')
 
 #algorithms
-chen2019RNN = True
+mtfP2ip2019RNN = True
 
 #data Types
 orgData = False
@@ -41,7 +41,7 @@ baseResultsFolderName = os.path.join(root_path, 'dataset/proc_data/benchmark_res
 #runs based on global variables
 #can be toggled before calling function
 def RunAll():    
-    if chen2019RNN:
+    if mtfP2ip2019RNN:
         #create results folders if they do not exist
         PPIPUtils.makeDir(baseResultsFolderName)
         # resultsFolderName=  baseResultsFolderName+'mtf20Results/'
