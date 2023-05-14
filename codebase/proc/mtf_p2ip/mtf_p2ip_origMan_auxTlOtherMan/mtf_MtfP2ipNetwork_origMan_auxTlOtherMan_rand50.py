@@ -30,7 +30,7 @@ class MtfP2ipNetwork(nn.Module):
         self.n_heads = n_heads  # The number of attention heads (aka parallel attention layers). dim_val must be divisible by this number. Default: 8
         dropout_pos_enc = 0.10
         n_encoder_layers = 1  # Number of times the encoder layer is stacked in the encoder. Default: 4
-        # # ############################ Transformer encoder part -end ############################
+        # ############################# Transformer encoder part -end ############################
 
         self.convLst = nn.ModuleList()
         self.SEQLst = nn.ModuleList()
@@ -79,7 +79,8 @@ class MtfP2ipNetwork(nn.Module):
         self.bn1 = nn.BatchNorm1d(layer_1_size)
         self.bn2 = nn.BatchNorm1d(layer_2_size)
         self.bn3 = nn.BatchNorm1d(layer_3_size)
-        
+
+
     def forward(self,x):
         (protA, protB, auxProtA, auxProtB) = x
         protLst = []
@@ -174,15 +175,17 @@ class MtfP2ipNetwork(nn.Module):
         x = self.linear4(x)
         return x
 
+
 class NetworkRunnerMtfP2ip(NetworkRunnerCollate):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='Adam',weight_decay=0,sched_factor=0.1,sched_patience=1,sched_cooldown=0,sched_thresh=1e-2,predictSoftmax=True,hyp={},skipScheduler=30):
         NetworkRunnerCollate.__init__(self,net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax,hyp)
         self.skipScheduler = hyp.get('skipScheduler',skipScheduler)
-    
-            
+
+
     def updateScheduler(self,values):
         if self.scheduler is not None and self.epoch > self.skipScheduler:
             self.scheduler.step(values)
+
 
 class MtfP2ipModel(GenericNetworkModel):
     def __init__(self,hyp={},inSize=12,aux_oneDencodingsize=1024,hiddenSize=50,numLayers=6,fullGPU=False,deviceType=None,numEpochs=100,batchSize=256,lr=5e-4,minLr=1e-4,schedFactor=.5,schedPatience=3,schedThresh=1e-2,threshSchedMode='abs'):
@@ -198,12 +201,13 @@ class MtfP2ipModel(GenericNetworkModel):
         #move uncommon network runner properties into hyperparams list if needed
         hyp['amsgrad'] = hyp.get('amsgrad',True)
         hyp['threshSchedMode'] = hyp.get('threshSchedMode',threshSchedMode)
-        
-        
+
+
     def genModel(self):
         self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
         self.model = NetworkRunnerMtfP2ip(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
+
 
     #train network
     def fit(self,pairLst,classes,dataMatrix,oneDdataMatrix,validationPairs=None, validationClasses=None):
@@ -218,9 +222,11 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
         self.inSize = self.hyperParams.get('inSize',inSize) #temporary value, until data is loaded in loadFeatureData function
         self.aux_oneDencodingsize = self.hyperParams.get('aux_oneDencodingsize',aux_oneDencodingsize) #temporary value, until data is loaded in loadFeatureData function
         self.hiddenSize = self.hyperParams.get('hiddenSize',hiddenSize)
-        
+
+
     def genModel(self):
         self.model = MtfP2ipModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
+
 
     def loadFeatureData(self,featureFolder):
         dataLookupSkip, dataMatrixSkip = self.loadEncodingFileWithPadding(featureFolder+'SkipGramAA7H5.encode',self.maxProteinLength)

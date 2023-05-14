@@ -32,7 +32,7 @@ def execute():
     trainSets, testSets, saves, pfs, folderName = loadHumanHeldOut50(resultsFolderName)
     outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_held50.txt')
     # mtf_RunTrainTest_origMan_auxTlOtherMan_Rand50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
-    mtf_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+    mtf_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
     mtf_RunTrainTest_origMan_auxTlOtherMan_held50.calcOverallScore_Pos50(outResultsName)
 
 

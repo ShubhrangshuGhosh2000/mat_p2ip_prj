@@ -34,7 +34,7 @@ def execute():
     outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_held20_1.txt'))
     outResultsNameLst.append(os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_held20_2.txt'))
     # mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True, modelsLst=None,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
-    mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True, modelsLst=None,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+    mtf_RunTrainTest_origMan_auxTlOtherMan_held20.runTestLst(MtfP2ipNetworkModule, outResultsNameLst,trainSets,testSets,folderName,hyp,resultsAppend=True, modelsLst=None,saveModels=saves,predictionsFLst = pfs,startIdx=0)
     mtf_RunTrainTest_origMan_auxTlOtherMan_held20.calcOverallScore_Pos20(outResultsNameLst)
 
 
