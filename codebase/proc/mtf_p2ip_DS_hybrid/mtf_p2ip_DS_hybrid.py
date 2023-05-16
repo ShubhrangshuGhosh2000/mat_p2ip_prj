@@ -8,8 +8,10 @@ sys.path.insert(0, str(path_root))
 import pandas as pd
 from utils import PPIPUtils
 
+root_path = os.path.join('/project/root/directory/path/here')
 root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
 
+orig_dscript_data_path = os.path.join('/original_D_SCRIPT_project/cross_species_prediction_result/path/here')
 orig_dscript_data_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/D_SCRIPT_prj/cross_spec_pred_result')
 mtf_p2ip_DS_data_path = os.path.join(root_path, 'dataset/proc_data_DS/DS_hTuned_27epochs_converged')
 mtf_p2ip_hybrid_data_path = os.path.join(root_path, 'dataset/proc_data_DS/mtf_p2ip_DS_hybrid')
