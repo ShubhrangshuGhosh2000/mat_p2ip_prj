@@ -2,3 +2,4 @@ dataset/
 dataset_to_share/
 uniprot_sprot.fasta
 __pycache__/
+ps_batch_submit_script/
