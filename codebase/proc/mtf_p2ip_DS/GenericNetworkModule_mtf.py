@@ -1,7 +1,4 @@
 import sys
-# currentdir = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(currentdir)
-
 from pathlib import Path
 path_root = Path(__file__).parents[2]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
@@ -10,7 +7,6 @@ sys.path.insert(0, str(path_root))
 from utils.GenericModule import GenericModule
 import numpy as np
 
-#designed for usage with neural network models using dictionary datasets
 class GenericNetworkModule(GenericModule):
     def __init__(self, hyperParams = {}):
         GenericModule.__init__(self,hyperParams)
@@ -19,8 +15,8 @@ class GenericNetworkModule(GenericModule):
         self.oneDdataMatrix = None
         self.validationRate = hyperParams.get('ValidationRate',None)
         self.scaleData=None
-        
-        
+
+
     #when running fit or predict, pass in the dataMatrix
     def fit(self,trainFeatures,trainClasses):
         if self.validationRate is not None and self.validationRate > 0:
@@ -46,17 +42,21 @@ class GenericNetworkModule(GenericModule):
 
     def loadFeatureData(self,featureFolder):
         pass
-        
+
+
     #no scaling in this model
     def scaleFeatures(self,features,scaleType):
         print('no scaling in this model')
         return features
-        
+
+
     def saveFeatScaler(self,fname):
         pass
-            
+
+
     def loadFeatScaler(self,fname):
         pass
+
 
     #swap out pair data for their indices in the data matrix, and return them as features
     def genFeatureData(self,pairs,dataType='train'):    
@@ -69,12 +69,13 @@ class GenericNetworkModule(GenericModule):
         featsData = [self.dataLookup[str(a)] for a in orgFeatsData.flatten()]
         featsData = np.asarray(featsData).reshape(classData.shape[0],2)
         return featsData, classData
-    
-    
+
+
     def predictFromBatch(self,testPairs,batchSize,model=None):
         #no reason to use batches since pairwise data isn't created until dataloader
         return self.predictPairs(testPairs,model)
-        
+
+
     #no reason to load pairs from file for this model
     def predictFromFile(self,testFile,batchSize,sep='\t',headerLines=1,classIdx=-1,model=None):
         pass

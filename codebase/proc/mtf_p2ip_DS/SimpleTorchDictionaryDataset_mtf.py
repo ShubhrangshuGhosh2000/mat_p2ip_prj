@@ -10,20 +10,7 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         else:
             self.data=featureData
             self.oneDdata=oneDdataMatrix
-        
-        #This makes no sense to me, but, it seems it is much faster to index into our data using 2 individual numbers return from numpy than using pytorch
-        #Testing using invidual indexing (x0=data[index[0];x1=data[index[1]]) vs pairwise indexing ( (x0,x1) = data[index]) on a 2D self.data array (shape=(19115,210))
-        #My timings (per epoch) from 100,000 pairs per epoch (note: no difference found using int64 vs int32 vs int16 in torch)
-        #Using torch tensor on GPU, indvidual indexing - 6.7 seconds per epoch
-        #Using torch tensor on CPU, indvidual indexing - 0.85 seconds per epoch
-        #Using torch tensor on GPU, indexing as pair (returns tuple) -- 2 second per epoch
-        #Using torch tensor on CPU, indexing as pair (returns tuple) -- 6.3 seconds per epoch 
-        #Using numpy, indexing as pair (returns tuple) -- 7.1 seconds per epoch 
-        #Using numpy, indvidual indexing -- 0.41 seconds per epoch  (winner)
-        #Doing nothing (just indexing the class list and returning) 0.12
-        #Thus, numpy is about 3x faster than a cpu tensor, and 6x-20x faster than a gpu tensor (which becomes the bottleneck if left on the gpu)
-        #**shrug**
-        
+
         self.pairLst =pairLst#torch.tensor(pairLst).long()
         
         self.noClasses=False
@@ -44,6 +31,7 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         self.full_gpu = full_gpu #if true, push everything to gpu
         self.deviceType = deviceType
 
+
     def __getitem__(self,index):
         y = self.classData[index]
         #individually indexing is faster?
@@ -58,7 +46,6 @@ class SimpleTorchDictionaryDataset(data.Dataset):
         aux1 = self.oneDdata[self.pairLst[index][1]]
         aux0 = aux0.float()
         aux1 = aux1.float()
-
         return (x0,x1,aux0,aux1,y)
 
 
@@ -76,11 +63,9 @@ class SimpleTorchDictionaryDataset(data.Dataset):
             # self.classData = self.classData.cuda()
             self.classData = self.classData.to(torch.device(self.deviceType))
 
-    
+
     def deactivate(self):
         self.data = self.data.cpu()
         self.oneDdata = self.oneDdata.cpu()
         #self.pairLst = self.pairLst.cpu()
         self.classData = self.classData.cpu()
-
-for f in mtf_p2ip_AD/*.py; do mv "$f" "$(echo "$f" | sed s/mtf/mtf/)"; done
