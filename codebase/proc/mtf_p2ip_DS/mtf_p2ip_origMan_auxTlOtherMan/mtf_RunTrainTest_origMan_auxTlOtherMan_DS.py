@@ -1,6 +1,5 @@
-import sys, os
+import sys
 import pandas as pd
-import glob
 
 from pathlib import Path
 path_root = Path(__file__).parents[3]  # upto 'codebase' folder
@@ -179,7 +178,7 @@ def runTest_DS(modelClass, outResultsName,trainSets,testSets,featureFolder,hyper
     return (totalPredictions, totalClasses, model, trainedModelsLst)
 
 
-# SPECIALLY WRITTEN FOR Different Species (DS) : feature attribution purpose .
+# SPECIALLY WRITTEN FOR Different Species (DS): feature attribution purpose .
 #modelClass - the class of the model to use
 #testSets  -- lists of protein pairs to use in testings (p1, p2, class)
 #featureFolder -- Folder containing dataset/features for classifier to pull features from
