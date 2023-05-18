@@ -1,4 +1,4 @@
-# mtf_p2ip_prj
+# mat_p2ip_prj
 For the code sharing with paper-1
 
 (*) There are redundancies in the codebase (specially in 'mtf_p2ip' folder) as we used to run different sets of experiments concurrently on a single machine.
