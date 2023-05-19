@@ -3,7 +3,7 @@ import os
 import sys
 
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'mtf_p2ip_prj' folder
+path_root = Path(__file__).parents[3]  # upto 'mat_p2ip_prj' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
