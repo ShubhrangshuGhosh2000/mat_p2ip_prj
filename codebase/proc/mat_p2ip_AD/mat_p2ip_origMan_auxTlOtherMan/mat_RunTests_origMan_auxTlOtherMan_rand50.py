@@ -9,16 +9,16 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 from utils import PPIPUtils
-from proc.mtf_p2ip_AD.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_rand50 import MtfP2ipNetworkModule
+from proc.mat_p2ip_AD.mat_p2ip_origMan_auxTlOtherMan.mat_MatP2ipNetwork_origMan_auxTlOtherMan_rand50 import MatP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
-from proc.mtf_p2ip_AD.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_rand50
+from proc.mat_p2ip_AD.mat_p2ip_origMan_auxTlOtherMan import mat_RunTrainTest_origMan_auxTlOtherMan_rand50
 
 
 root_path = os.path.join('/project/root/directory/path/here')
-root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
+root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
 
-baseResultsFolderName = os.path.join(root_path, 'dataset/proc_data_AD/mtf_res/mtf_res_origMan_auxTlOtherMan_tune/')
+baseResultsFolderName = os.path.join(root_path, 'dataset/proc_data_AD/mat_res/mat_res_origMan_auxTlOtherMan_tune/')
 
 def execute(findBestHparam=False):
     start_idx = end_idx = 0
@@ -60,11 +60,11 @@ def execute(findBestHparam=False):
         print("\n ### itr: " + str(itr) + ' out of '+ str(hparam_grid_list_len) + "\nhparam_combo: " + str(current_iter_hparam_combo_dict))
 
         hyp = {**hyp, **current_iter_hparam_combo_dict}
-        outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_tune_' + str(itr) + '.txt')
+        outResultsName = os.path.join(resultsFolderName, 'mat_res_origMan_auxTlOtherMan_tune_' + str(itr) + '.txt')
         if(not findBestHparam):
             trainSets, testSets, saves, pfs, folderName = loadLiADData(resultsFolderName + str('/'))
-            mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
-            mtf_RunTrainTest_origMan_auxTlOtherMan_rand50.calcOverallScore_Pos50(outResultsName)
+            mat_RunTrainTest_origMan_auxTlOtherMan_rand50.runTest(MatP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
+            mat_RunTrainTest_origMan_auxTlOtherMan_rand50.calcOverallScore_Pos50(outResultsName)
         elif(findBestHparam):
             outResultCsvFileName = outResultsName.replace('.txt', '.csv')
             outResultDf = pd.read_csv(outResultCsvFileName)
