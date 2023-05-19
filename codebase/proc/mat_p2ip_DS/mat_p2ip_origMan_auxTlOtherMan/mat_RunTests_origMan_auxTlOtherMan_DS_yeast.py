@@ -7,19 +7,19 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 from utils import PPIPUtils
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_DS_test import MtfP2ipNetworkModule
+from proc.mat_p2ip_DS.mat_p2ip_origMan_auxTlOtherMan.mat_MatP2ipNetwork_origMan_auxTlOtherMan_DS_test import MatP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_DS
+from proc.mat_p2ip_DS.mat_p2ip_origMan_auxTlOtherMan import mat_RunTrainTest_origMan_auxTlOtherMan_DS
 
 
 root_path = os.path.join('/project/root/directory/path/here')
-root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
+root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
 
 
 def execute(spec_type = 'human'): 
     print('\n########## spec_type: ' + str(spec_type))
-    resultsFolderName = os.path.join(root_path, 'dataset/proc_data_DS/mtf_res_origMan_auxTlOtherMan_' + spec_type + '/')
+    resultsFolderName = os.path.join(root_path, 'dataset/proc_data_DS/mat_res_origMan_auxTlOtherMan_' + spec_type + '/')
     # create results folders if they do not exist
     PPIPUtils.makeDir(resultsFolderName)
     hyp = {'fullGPU':True,'deviceType':'cuda'} 
@@ -37,12 +37,12 @@ def execute(spec_type = 'human'):
     print('hyp: ' + str(hyp))
 
     trainSets, testSets, saves, pfs, featureFolder = loadDscriptData(resultsFolderName, spec_type)
-    outResultsName = os.path.join(resultsFolderName, 'mtf_res_origMan_auxTlOtherMan_' + spec_type + '_DS.txt')
+    outResultsName = os.path.join(resultsFolderName, 'mat_res_origMan_auxTlOtherMan_' + spec_type + '_DS.txt')
     # specifying human_full model location
-    human_full_model_loc = os.path.join(root_path, 'dataset/proc_data_DS/mtf_res_origMan_auxTlOtherMan_human/DS_human_full.out')
+    human_full_model_loc = os.path.join(root_path, 'dataset/proc_data_DS/mat_res_origMan_auxTlOtherMan_human/DS_human_full.out')
     loads = [human_full_model_loc]
-    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS(MtfP2ipNetworkModule, outResultsName,trainSets,testSets,featureFolder,hyp,resultsAppend=False,saveModels=None,predictionsFLst = pfs,startIdx=0,loads=loads,spec_type=spec_type)
-    # mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS_xai(MtfP2ipNetworkModule,testSets,featureFolder,hyp,startIdx=0,loads=loads,spec_type=spec_type,resultsFolderName=resultsFolderName)
+    mat_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS(MatP2ipNetworkModule, outResultsName,trainSets,testSets,featureFolder,hyp,resultsAppend=False,saveModels=None,predictionsFLst = pfs,startIdx=0,loads=loads,spec_type=spec_type)
+    # mat_RunTrainTest_origMan_auxTlOtherMan_DS.runTest_DS_xai(MatP2ipNetworkModule,testSets,featureFolder,hyp,startIdx=0,loads=loads,spec_type=spec_type,resultsFolderName=resultsFolderName)
 
 
 def extract_prot_seq_feat(spec_type = 'human'):

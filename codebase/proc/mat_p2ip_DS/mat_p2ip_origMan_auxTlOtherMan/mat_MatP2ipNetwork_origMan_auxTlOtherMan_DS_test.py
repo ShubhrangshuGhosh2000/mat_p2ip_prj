@@ -7,18 +7,18 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 from utils.NetworkRunnerCollate import NetworkRunnerCollate
-from proc.mtf_p2ip_DS.GenericNetworkModel_mtf import GenericNetworkModel
-from proc.mtf_p2ip_DS.GenericNetworkModule_mtf import GenericNetworkModule
-from proc.mtf_p2ip_DS.positional_encoder_mtf import PositionalEncoder
+from proc.mat_p2ip_DS.GenericNetworkModel_mat import GenericNetworkModel
+from proc.mat_p2ip_DS.GenericNetworkModule_mat import GenericNetworkModule
+from proc.mat_p2ip_DS.positional_encoder_mat import PositionalEncoder
 import torch
 import torch.nn as nn
 import joblib
 import numpy as np
 
 
-class MtfP2ipNetwork(nn.Module):
+class MatP2ipNetwork(nn.Module):
     def __init__(self,hiddenSize=50,inSize=14,aux_oneDencodingsize=1024,numLayers=6,n_heads=2,layer_1_size=1024,seed=1,fullGPU=False,deviceType='cpu'):
-        super(MtfP2ipNetwork, self).__init__()
+        super(MatP2ipNetwork, self).__init__()
         torch.manual_seed(seed)
         self.pooling = nn.MaxPool1d(3)
         self.activation = nn.LeakyReLU(0.3)
@@ -174,7 +174,7 @@ class MtfP2ipNetwork(nn.Module):
         x = self.linear4(x)
         return x
 
-class NetworkRunnerMtfP2ip(NetworkRunnerCollate):
+class NetworkRunnerMatP2ip(NetworkRunnerCollate):
     def __init__(self,net,batch_size=256,deviceType=None,lr=1e-2,optType='Adam',weight_decay=0,sched_factor=0.1,sched_patience=1,sched_cooldown=0,sched_thresh=1e-2,predictSoftmax=True,hyp={},skipScheduler=30):
         NetworkRunnerCollate.__init__(self,net,batch_size,deviceType,lr,optType,weight_decay,sched_factor,sched_patience,sched_cooldown,sched_thresh,predictSoftmax,hyp)
         self.skipScheduler = hyp.get('skipScheduler',skipScheduler)
@@ -184,7 +184,7 @@ class NetworkRunnerMtfP2ip(NetworkRunnerCollate):
         if self.scheduler is not None and self.epoch > self.skipScheduler:
             self.scheduler.step(values)
 
-class MtfP2ipModel(GenericNetworkModel):
+class MatP2ipModel(GenericNetworkModel):
     def __init__(self,hyp={},inSize=12,aux_oneDencodingsize=1024,hiddenSize=50,numLayers=6,fullGPU=False,deviceType=None,numEpochs=100,batchSize=256,lr=5e-4,minLr=1e-4,schedFactor=.5,schedPatience=3,schedThresh=1e-2,threshSchedMode='abs'):
         GenericNetworkModel.__init__(self,hyp=hyp,fullGPU=fullGPU,deviceType=deviceType,numEpochs=numEpochs,batchSize=batchSize,lr=lr,minLr=minLr,schedFactor=schedFactor,schedPatience=schedPatience,schedThresh=schedThresh)
         # ##### setting hyper-parameters
@@ -201,7 +201,7 @@ class MtfP2ipModel(GenericNetworkModel):
         
         
     def genModel(self):
-        self.net = MtfP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
+        self.net = MatP2ipNetwork(self.hiddenSize,self.inSize,self.aux_oneDencodingsize,self.numLayers \
                                 ,self.n_heads, self.layer_1_size, self.seed, self.fullGPU, self.deviceType)
         # # ################################# for multi-gpu training -start ###############
         # # MUST SET ENV VARIABLE 'CUDA_VISIBLE_DEVICES' in the runtime environment where multigpu training will take place:
@@ -216,7 +216,7 @@ class MtfP2ipModel(GenericNetworkModel):
         # ################################# only for testing (when model is already given) -start ###############
         self.skipScheduler = self.hyp.get('skipScheduler', 30)
         # ################################# only for testing (when model is already given) -end ###############
-        self.model = NetworkRunnerMtfP2ip(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
+        self.model = NetworkRunnerMatP2ip(self.net,hyp=self.hyp,skipScheduler=self.skipScheduler)
 
     #train network
     def fit(self,pairLst,classes,dataMatrix,oneDdataMatrix,validationPairs=None, validationClasses=None):
@@ -224,7 +224,7 @@ class MtfP2ipModel(GenericNetworkModel):
         super().fit(pairLst,classes,dataMatrix,oneDdataMatrix,validationPairs,validationClasses)
 
 
-class MtfP2ipNetworkModule(GenericNetworkModule):
+class MatP2ipNetworkModule(GenericNetworkModule):
     def __init__(self, hyperParams = {}, maxProteinLength=2000, hiddenSize=50,inSize=12, aux_oneDencodingsize=1024):
         GenericNetworkModule.__init__(self,hyperParams)
         self.maxProteinLength = self.hyperParams.get('maxProteinLength',maxProteinLength)
@@ -233,7 +233,7 @@ class MtfP2ipNetworkModule(GenericNetworkModule):
         self.hiddenSize = self.hyperParams.get('hiddenSize',hiddenSize)
         
     def genModel(self):
-        self.model = MtfP2ipModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
+        self.model = MatP2ipModel(self.hyperParams,self.inSize,self.aux_oneDencodingsize,self.hiddenSize)
 
 
     def loadFeatureData_DS(self,featureFolder, spec_type=None):

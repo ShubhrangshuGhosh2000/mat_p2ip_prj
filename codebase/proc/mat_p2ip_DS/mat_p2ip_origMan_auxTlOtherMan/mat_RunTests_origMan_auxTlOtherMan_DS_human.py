@@ -7,19 +7,19 @@ sys.path.insert(0, str(path_root))
 
 from utils import dl_reproducible_result_util
 from utils import PPIPUtils
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan.mtf_MtfP2ipNetwork_origMan_auxTlOtherMan_DS_train import MtfP2ipNetworkModule
+from proc.mat_p2ip_DS.mat_p2ip_origMan_auxTlOtherMan.mat_MatP2ipNetwork_origMan_auxTlOtherMan_DS_train import MatP2ipNetworkModule
 from utils.ProjectDataLoader import *
 from utils.feat_engg_manual_main import extract_prot_seq_2D_manual_feat
-from proc.mtf_p2ip_DS.mtf_p2ip_origMan_auxTlOtherMan import mtf_RunTrainTest_origMan_auxTlOtherMan_DS
+from proc.mat_p2ip_DS.mat_p2ip_origMan_auxTlOtherMan import mat_RunTrainTest_origMan_auxTlOtherMan_DS
 
 
 root_path = os.path.join('/project/root/directory/path/here')
-root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
+root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
 
 
 def execute(spec_type = 'human'): 
     print('\n########## spec_type: ' + str(spec_type))
-    resultsFolderName = os.path.join(root_path, 'dataset/proc_data_DS/mtf_res_origMan_auxTlOtherMan_' + spec_type + '/')
+    resultsFolderName = os.path.join(root_path, 'dataset/proc_data_DS/mat_res_origMan_auxTlOtherMan_' + spec_type + '/')
     #create results folders if they do not exist
     PPIPUtils.makeDir(resultsFolderName)
 
@@ -41,7 +41,7 @@ def execute(spec_type = 'human'):
     print('hyp: ' + str(hyp))
 
     trainSets, testSets, saves, pfs, featureFolder = loadDscriptData_human_full(resultsFolderName)
-    mtf_RunTrainTest_origMan_auxTlOtherMan_DS.runTrainOnly_DS(MtfP2ipNetworkModule, trainSets, featureFolder, hyp, saves, spec_type)
+    mat_RunTrainTest_origMan_auxTlOtherMan_DS.runTrainOnly_DS(MatP2ipNetworkModule, trainSets, featureFolder, hyp, saves, spec_type)
 
 
 def extract_prot_seq_feat(spec_type = 'human'):

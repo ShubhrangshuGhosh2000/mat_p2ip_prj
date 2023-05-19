@@ -4,7 +4,7 @@ path_root = Path(__file__).parents[2]  # upto 'codebase' folder
 sys.path.insert(0, str(path_root))
 # print(sys.path)
 
-from proc.mtf_p2ip_DS.SimpleTorchDictionaryDataset_mtf import SimpleTorchDictionaryDataset
+from proc.mat_p2ip_DS.SimpleTorchDictionaryDataset_mat import SimpleTorchDictionaryDataset
 
 class GenericNetworkModel(object):
     def __init__(self,hyp={},fullGPU=False,deviceType=None,numEpochs=100,batchSize=256,optType='Adam',lr=1e-2,momentum=0,minLr=1e-6,schedFactor=.1,schedPatience=2,schedThresh=1e-2,sched_cooldown=0,weightDecay=0,seed=1):

@@ -17,7 +17,7 @@ def calc_attribution_score(root_path = './'):
 
     for spec_type in spec_type_lst:
         print('\n########## spec_type: ' + str(spec_type))
-        spec_attrbn_file_path = os.path.join(root_path, 'dataset/proc_data_DS/mtf_res_origMan_auxTlOtherMan_' + spec_type,
+        spec_attrbn_file_path = os.path.join(root_path, 'dataset/proc_data_DS/mat_res_origMan_auxTlOtherMan_' + spec_type,
                                             'attribution_' + spec_type + '.csv')
         spec_attrbn_df = pd.read_csv(spec_attrbn_file_path)
 
@@ -68,6 +68,6 @@ def calc_attribution_score(root_path = './'):
 
 if __name__ == '__main__':
     root_path = os.path.join('/project/root/directory/path/here')
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mtf_p2ip_prj')
+    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
 
     calc_attribution_score(root_path)
