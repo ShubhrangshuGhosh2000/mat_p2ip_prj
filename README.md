@@ -1,5 +1,5 @@
 # mat_p2ip_prj
-For the code sharing with paper-1
+The codebase associated with the paper "MaTPPIp : a sequence driven, feature mixed protein-protein interaction prediction architecture with eXplainable AI based attribute assessment"
 
 (*) There are redundancies in the codebase (specially in 'mtf_p2ip' folder) as we used to run different sets of experiments concurrently on a single machine.
 
