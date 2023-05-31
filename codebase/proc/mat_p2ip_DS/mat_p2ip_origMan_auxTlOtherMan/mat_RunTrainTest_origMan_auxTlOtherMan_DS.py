@@ -2,13 +2,12 @@ import sys
 import pandas as pd
 
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
 
 
 import numpy as np
-# import PPIPUtils
+
 from utils import PPIPUtils
 import time
 
@@ -20,17 +19,16 @@ def writePredictions(fname,predictions,classes):
     f.close()
 
 def writeScore(predictions,classes, fOut, predictionsFName=None, thresholds=[0.01,0.03,0.05,0.1,0.25,0.5,1]):
-    #concate results from each fold, and get total scoring metrics
+    
     finalPredictions = np.hstack(predictions)
     finalClasses = np.hstack(classes)
     results = PPIPUtils.calcScores(finalClasses,finalPredictions,thresholds)
     
-    #format total metrics, and write them to a file
+    
     lst = PPIPUtils.formatScores(results,'Total')
     for line in lst:
         fOut.write('\t'.join(str(s) for s in line) + '\n')
         print(line)
-    
     fOut.write('\n')
     
     if predictionsFName is not None:
@@ -38,10 +36,10 @@ def writeScore(predictions,classes, fOut, predictionsFName=None, thresholds=[0.0
 
 
 
-# SPECIALLY WRITTEN FOR Different Species (DS): full human data training
+
 def runTrainOnly_DS(modelClass, trainSets, featureFolder, hyperParams, saveModels, spec_type):
     print('Inside the runTrainOnly_DS() method - Start')
-    #record total time for computation
+    
     t = time.time()
     
     if featureFolder[-1] != '/':
@@ -58,7 +56,7 @@ def runTrainOnly_DS(modelClass, trainSets, featureFolder, hyperParams, saveModel
     return model
 
 
-# SPECIALLY WRITTEN FOR Different Species (DS).
+
 #modelClass - the class of the model to use
 #outResultsName -- Name of File to write results to
 #trainSets -- lists of protein pairs to use in trainings (p1, p2, class)
@@ -69,18 +67,18 @@ def runTrainOnly_DS(modelClass, trainSets, featureFolder, hyperParams, saveModel
 #modelsLst -- Optional argument containing list of already training models.  If provided, these models can be used in place of training (note:  argument is designed to take the list of models that this function returns so they can be used on a different test set)
 def runTest_DS(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperParams = {},predictionsName =None,loadedModel= None,modelsLst = None,resultsAppend=False,keepModels=False,saveModels=None,predictionsFLst = None, startIdx=0,loads=None,spec_type=None):
     print('Inside the runTest_DS() method - Start')
-    #record total time for computation
+    
     t = time.time()
     
     if featureFolder[-1] != '/':
         featureFolder += '/'
-    # ############### EXTRA CODE ADDED -START #####################
-    # check whether outResults CSV exists; if it exists, then load it
+    
+    
     outResultDf = None
     outResultCsvFileName = outResultsName.replace('.txt', '.csv')
-    # if os.path.exists(outResultCsvFileName):  # For Different Species, no need to aapend
-    #     outResultDf = pd.read_csv(outResultCsvFileName)
-    # ############### EXTRA CODE ADDED -END #####################
+    
+    
+    
 
     #open file to write results to for each fold/split
     if resultsAppend and outResultsName:
@@ -105,7 +103,7 @@ def runTest_DS(modelClass, outResultsName,trainSets,testSets,featureFolder,hyper
         model.loadFeatureData_DS(featureFolder, spec_type)
     
     for i in range(startIdx,len(testSets)):
-        # for i in range(2,len(testSets)):  # ############ TEMP CODE
+        
         model.batchIdx = i
 
         #create model, passing training data, testing data, and hyperparameters
@@ -141,19 +139,19 @@ def runTest_DS(modelClass, outResultsName,trainSets,testSets,featureFolder,hyper
                 outResults.write('\t'.join(str(s) for s in line) + '\n')
                 print(line)
             outResults.write('\n')
-            # ############### EXTRA CODE ADDED -START #####################
+            
             outResults.close()
             outResults = open(outResultsName,'a')
-            # create score_df
+            
             score_df = pd.DataFrame({'Species': [spec_type]
                             , 'AUPR': [results['AUPR']], 'Precision': [results['Precision']]
                             , 'Recall': [results['Recall']], 'AUROC': [results['AUROC']]
                             })
-            # store the score_df into outResultDf
+            
             outResultDf = score_df if outResultDf is None else pd.concat([outResultDf, score_df], axis=0, sort=False)
-            # save outResultDf as CSV
+            
             outResultDf.to_csv(outResultCsvFileName, index=False)
-            # ############### EXTRA CODE ADDED -END #####################
+            
         else:
             for line in lst:
                 print(line)
@@ -178,7 +176,7 @@ def runTest_DS(modelClass, outResultsName,trainSets,testSets,featureFolder,hyper
     return (totalPredictions, totalClasses, model, trainedModelsLst)
 
 
-# SPECIALLY WRITTEN FOR Different Species (DS): feature attribution purpose .
+
 #modelClass - the class of the model to use
 #testSets  -- lists of protein pairs to use in testings (p1, p2, class)
 #featureFolder -- Folder containing dataset/features for classifier to pull features from
@@ -196,6 +194,6 @@ def runTest_DS_xai(modelClass,testSets,featureFolder,hyperParams = {},startIdx=0
     for i in range(startIdx,len(testSets)):
         model.loadModelFromFile(loads[i])
         model.predictPairs_xai_DS(testSets[i],resultsFolderName)
-    # end of for loop: for i in range(startIdx,len(testSets)):
+    
     print('Inside the runTest_DS_xai() method - End')
 

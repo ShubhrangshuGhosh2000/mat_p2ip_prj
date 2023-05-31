@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
-path_root = Path(__file__).parents[2]  # upto 'codebase' folder
+path_root = Path(__file__).parents[2]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 from proc.mat_p2ip_DS.SimpleTorchDictionaryDataset_mat import SimpleTorchDictionaryDataset
 
@@ -15,7 +15,7 @@ class GenericNetworkModel(object):
         self.minLr = hyp.get('minLr',minLr)
         self.deviceType = hyp.get('deviceType',deviceType)
 
-        #move network runner properties into hyperparams list if needed
+        
         hyp['batchSize'] = hyp.get('batchSize',batchSize)
         hyp['optType'] = hyp.get('optType',optType)
         hyp['lr'] = hyp.get('lr',lr)

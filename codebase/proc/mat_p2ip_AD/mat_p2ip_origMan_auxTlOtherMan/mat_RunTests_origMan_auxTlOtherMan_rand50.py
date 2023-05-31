@@ -3,9 +3,9 @@ from itertools import product
 import pandas as pd
 import torch
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 from utils import dl_reproducible_result_util
 from utils import PPIPUtils
@@ -22,27 +22,27 @@ baseResultsFolderName = os.path.join(root_path, 'dataset/proc_data_AD/mat_res/ma
 
 def execute(findBestHparam=False):
     start_idx = end_idx = 0
-    #create results folders if they do not exist
+    
     PPIPUtils.makeDir(baseResultsFolderName)
-    # the following are used to find the overall best hparam combination
+    
     overall_best_hparam_dict = {}
     best_score = 0.00
 
     hyp = {'fullGPU':True,'deviceType':'cuda'} 
 
-    # populate hyperparams
+    
     hyperparameters = {}
     hyperparameters['hiddenSize'] = [40, 44, 50, 60, 70]
     hyperparameters['numLayers'] = [4, 5, 6]
     hyperparameters['leakyReLU_negSlope'] = [0.01, 0.03, 0.1, 0.3, 0.4]  # 0.3
     hyperparameters['n_heads'] = [1, 2]
-    hyperparameters['layer_1_size'] = [1024, 800, 1600]  # 1024  # for the linear layers
+    hyperparameters['layer_1_size'] = [1024, 800, 1600]  
 
-    print("Creating grid of all possible hyper-parameters combinations...")
+    
     hparam_grid_list = list(product(hyperparameters['hiddenSize'], hyperparameters['numLayers'], hyperparameters['leakyReLU_negSlope'] \
                                     , hyperparameters['n_heads'], hyperparameters['layer_1_size']))
-    # iterate through the grid and perform the hyper-parameter tuning to find the best hyper-parameter combination
-    print("Iterating through the grid and performing the hyper-parameter tuning to find the best hyper-parameter combination...")
+    
+    
     hparam_grid_list_len = len(hparam_grid_list)
     if(not findBestHparam):
         start_idx = 2*(hparam_grid_list_len//3)     # 0                          # hparam_grid_list_len//3           # 2*(hparam_grid_list_len//3)
@@ -74,18 +74,16 @@ def execute(findBestHparam=False):
                 overall_best_hparam_dict['best_itr_no'] = itr
                 overall_best_hparam_dict['best_hparam_combo_dict'] = hyp
                 overall_best_hparam_dict['best_score_dict'] = {'avg_ACC': crnt_score, 'avg_AUC': outResultDf.at[0, 'avg_AUC']}
-    # end of for loop: for itr in range(start_idx, end_idx):
+    
     if(not findBestHparam):
         print('\n ############## END OF TUNING: start_idx: ' + str(start_idx) + ' : end_idx: ' + str(end_idx)+ ' ################')
         pass
     elif(findBestHparam):
-        # load the best tuned model
+        
         best_model_FolderName= os.path.join(baseResultsFolderName, 'tune_' + str(overall_best_hparam_dict['best_itr_no']), 'Li2020_AD.out')
         best_state = torch.load(best_model_FolderName)
         overall_best_hparam_dict['best_lr'] = best_state['scheduler']['best']
-        print('\n ############################ Best hyper-param combo related details -Start ##################\n')
         print(str(overall_best_hparam_dict))
-        print('\n ############################ Best hyper-param combo related details -End ##################\n')
 
 
 def extract_prot_seq_feat():

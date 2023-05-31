@@ -55,17 +55,12 @@ class SimpleTorchDictionaryDataset(data.Dataset):
 
     def activate(self):        
         if self.full_gpu: #push everything to gpu
-            # self.data = self.data.cuda()
             self.data = self.data.to(torch.device(self.deviceType))
-            # self.oneDdata = self.oneDdata.cuda()
             self.oneDdata = self.oneDdata.to(torch.device(self.deviceType))
-            #self.pairLst = self.pairLst.cuda()
-            # self.classData = self.classData.cuda()
             self.classData = self.classData.to(torch.device(self.deviceType))
 
 
     def deactivate(self):
         self.data = self.data.cpu()
         self.oneDdata = self.oneDdata.cpu()
-        #self.pairLst = self.pairLst.cpu()
         self.classData = self.classData.cpu()

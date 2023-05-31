@@ -1,9 +1,9 @@
 import sys, os
 
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 from utils import dl_reproducible_result_util
 from utils import PPIPUtils
@@ -19,19 +19,18 @@ root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_C
 resultsFolderName = os.path.join(root_path, 'dataset/proc_data/mat_res/mat_res_origMan_auxTlOtherMan/')
 
 def execute():
-    #create results folders if they do not exist
     PPIPUtils.makeDir(resultsFolderName)
     hyp = {'fullGPU':True,'deviceType':'cuda'} 
 
-    hyp['hiddenSize'] = 70  # default: 50
-    hyp['numLayers'] = 4  # default: 6
-    hyp['n_heads'] = 1  # default: 2
-    hyp['layer_1_size'] = 1024  # default: 1024  # for the linear layers
-    print('hyp: ' + str(hyp))
+    hyp['hiddenSize'] = 70  
+    hyp['numLayers'] = 4  
+    hyp['n_heads'] = 1  
+    hyp['layer_1_size'] = 1024  
+    
 
     trainSets, testSets, saves, pfs, folderName = loadHumanHeldOut50(resultsFolderName)
     outResultsName = os.path.join(resultsFolderName, 'mat_res_origMan_auxTlOtherMan_held50.txt')
-    # mat_RunTrainTest_origMan_auxTlOtherMan_Rand50.runTest(MatP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=convertToFolder(saves),predictionsFLst = pfs,startIdx=0)
+    
     mat_RunTrainTest_origMan_auxTlOtherMan_held50.runTest(MatP2ipNetworkModule, outResultsName,trainSets,testSets,folderName,hyp,resultsAppend=True,saveModels=saves,predictionsFLst = pfs,startIdx=0)
     mat_RunTrainTest_origMan_auxTlOtherMan_held50.calcOverallScore_Pos50(outResultsName)
 

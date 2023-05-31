@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
-path_root = Path(__file__).parents[2]  # upto 'codebase' folder
+path_root = Path(__file__).parents[2]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 from utils.GenericModule import GenericModule
 import numpy as np

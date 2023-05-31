@@ -2,9 +2,9 @@ import sys, os
 import pandas as pd
 
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 import numpy as np
 from utils import PPIPUtils
@@ -48,13 +48,12 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
     
     if featureFolder[-1] != '/':
         featureFolder += '/'
-    # ############### EXTRA CODE ADDED -START #####################
-    # check whether outResults CSV exists; if it exists, then load it
+    
     outResultDf = None
     outResultCsvFileName = outResultsName.replace('.txt', '.csv')
     if os.path.exists(outResultCsvFileName):
         outResultDf = pd.read_csv(outResultCsvFileName)
-    # ############### EXTRA CODE ADDED -END #####################
+    
 
     #open file to write results to for each fold/split
     if resultsAppend and outResultsName:
@@ -113,20 +112,20 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
                 outResults.write('\t'.join(str(s) for s in line) + '\n')
                 print(line)
             outResults.write('\n')
-            # ############### EXTRA CODE ADDED -START #####################
+            
             outResults.close()
             outResults = open(outResultsName,'a')
-            # create score_df
+            
             score_df = pd.DataFrame({'Fold': ['Fold '+str(i)]
                             , 'ACC': [results['ACC']], 'AUC': [results['AUC']], 'Prec': [results['Prec']], 'Recall': [results['Recall']]
                             , 'Thresholds': [results['Thresholds']], 'Max Precision': [results['Max Precision']]
                             , 'Avg Precision': [results['Avg Precision']]
                             })
-            # store the score_df into outResultDf
+            
             outResultDf = score_df if outResultDf is None else pd.concat([outResultDf, score_df], axis=0, sort=False)
-            # save outResultDf as CSV
+            
             outResultDf.to_csv(outResultCsvFileName, index=False)
-            # ############### EXTRA CODE ADDED -END #####################
+            
         else:
             for line in lst:
                 print(line)
@@ -157,16 +156,14 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
     t = time.time()
     if featureFolder[-1] != '/':
         featureFolder += '/'
-    # ############### EXTRA CODE ADDED -START #####################
-    # check whether outResults CSV files exist; if they exist, then load them
+    
     outResultDfLst = []
     for i in range(0,len(testSetsLst)):
         indivOutResultCsvFileName = outResultsNameLst[i].replace('.txt', '.csv')
         outResultDfLst.insert(i, None)
         if os.path.exists(indivOutResultCsvFileName):
             outResultDfLst.insert(i, pd.read_csv(indivOutResultCsvFileName))
-    # ############### EXTRA CODE ADDED -END #####################    
-    #keep list of predictions/classes per fold
+    
     totalPredictions = []
     totalClasses = []
     trainedModelsLst = []
@@ -238,20 +235,20 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
                     outResults[testIdx].write('\t'.join(str(s) for s in line) + '\n')
                     print(line)
                 outResults[testIdx].write('\n')
-                # ############### EXTRA CODE ADDED -START #####################
+                
                 outResults[testIdx].close()
                 outResults[testIdx] = open(outResultsNameLst[testIdx],'a')
-                # create score_df
+                
                 score_df = pd.DataFrame({'Fold': ['Fold '+str(i)]
                                 , 'ACC': [results['ACC']], 'AUC': [results['AUC']], 'Prec': [results['Prec']], 'Recall': [results['Recall']]
                                 , 'Thresholds': [results['Thresholds']], 'Max Precision': [results['Max Precision']]
                                 , 'Avg Precision': [results['Avg Precision']]
                                 })
-                # store the score_df into the respective outResultDf
+                
                 outResultDfLst[testIdx] = score_df if outResultDfLst[testIdx] is None else pd.concat([outResultDfLst[testIdx], score_df], axis=0, sort=False)
-                # save the respective outResultDf as CSV
+                
                 outResultDfLst[testIdx].to_csv(outResultsNameLst[testIdx].replace('.txt', '.csv'), index=False)
-                # ############### EXTRA CODE ADDED -END #####################
+                
             else:
                 for line in lst:
                     print(line)
@@ -274,61 +271,48 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
 
 
 def calcOverallScore_Pos50(outResultsName):
-    print('\n #### inside the calcOverallScore_Pos50() method - Start')
-    print('outResultsName: ' + str(outResultsName))
     outResultCsvFileName = outResultsName.replace('.txt', '.csv')
     outResultDf = pd.read_csv(outResultCsvFileName)
-    # find average ACC and AUC val
+    
     avg_ACC = outResultDf['ACC'].mean()
     avg_AUC = outResultDf['AUC'].mean()
-    print('avg_ACC = ' + str(avg_ACC) + ' :: avg_AUC ' + str(avg_AUC))
-    # save the average values as separate columns of the outResultDf
+    
     outResultDf['avg_ACC'] = [avg_ACC] + [''] * (outResultDf.shape[0] - 1)
     outResultDf['avg_AUC'] = [avg_AUC] + [''] * (outResultDf.shape[0] - 1)
-    # save outResultDf
+    
     outResultDf.to_csv(outResultCsvFileName, index=False)
-    print('#### inside the calcOverallScore_Pos50() method - End') 
 
 
 def calcOverallScore_Pos20(outResultsNameLst):
-    print('\n #### inside the calcOverallScore_Pos20() method - Start')
+    
     for outResultsName in outResultsNameLst:
-        print('outResultsName: ' + str(outResultsName))
         outResultCsvFileName = outResultsName.replace('.txt', '.csv')
         outResultDf = pd.read_csv(outResultCsvFileName)
-        # calculate avg_Prec
-        # Precision at 3% recall indicates the 1th number from the max precision list ('Max Precision') when
-        # the threshold is [0.01,0.03,0.05,0.1,0.25,0.5,1].
-        # So the avg_Prec will be the average of all such 'Precision at 3% recall' values.
+        
         con_Prec_lst = []
         max_p_arr = outResultDf['Max Precision'].to_numpy()
-        # iterate over the max_p_arr whose each element is a string representation of the list of max-precisions
+        
         for indiv_Max_Precision_str in max_p_arr:
-            # indiv_Max_Precision_str is a string representation of the list of precisions
-            indiv_Max_Precision_str = indiv_Max_Precision_str.replace('[', '').replace(']', '')  # remove '[ and ']'
+            
+            indiv_Max_Precision_str = indiv_Max_Precision_str.replace('[', '').replace(']', '')  
             indiv_Max_Precision_lst = [float(prec) for prec in indiv_Max_Precision_str.split(',')]
-            indiv_Prec_val = indiv_Max_Precision_lst[1]  # 1th number for 3% recall
+            indiv_Prec_val = indiv_Max_Precision_lst[1]  
             con_Prec_lst.append(indiv_Prec_val)
         avg_Prec = np.asarray(con_Prec_lst).mean()
-        # calculate the avg_Avg_P
-        # Average Precision at 100% recall indicates the last number in the avg precision list ('Avg Precision') when
-        # the threshold is [0.01,0.03,0.05,0.1,0.25,0.5,1].
-        # So the avg_Avg_P will be the average of all such 'Average Precision at 100% recall' values.
+        
         con_avg_p_lst = []
         avg_p_arr = outResultDf['Avg Precision'].to_numpy()
-        # iterate over the avg_p_arr whose each element is a string representation of the list of precisions
+        
         for indiv_Avg_P_str in avg_p_arr:
-            # indiv_Avg_P_str is a string representation of the list of precisions
-            indiv_Avg_P_str = indiv_Avg_P_str.replace('[', '').replace(']', '')  # remove '[ and ']'
+            
+            indiv_Avg_P_str = indiv_Avg_P_str.replace('[', '').replace(']', '')  
             indiv_Avg_P_lst = [float(prec) for prec in indiv_Avg_P_str.split(',')]
-            indiv_Avg_P_val = indiv_Avg_P_lst[-1]  # last number for 100% recall
+            indiv_Avg_P_val = indiv_Avg_P_lst[-1]  
             con_avg_p_lst.append(indiv_Avg_P_val)
         avg_Avg_P = np.asarray(con_avg_p_lst).mean()
-        print('avg_Prec = ' + str(avg_Prec) + ' :: avg_Avg_P ' + str(avg_Avg_P))
-        # save the average values as separate rows of the outResultDf
+        
         outResultDf['avg_Prec'] = [avg_Prec] + [''] * (outResultDf.shape[0] - 1)
         outResultDf['avg_Avg_P'] = [avg_Avg_P] + [''] * (outResultDf.shape[0] - 1)
-        # save outResultDf
+        
         outResultDf.to_csv(outResultCsvFileName, index=False)
-    # end of for loop: for outResultsName in outResultsNameLst:
-    print('#### inside the calcOverallScore_Pos20() method - End') 
+    

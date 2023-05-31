@@ -2,9 +2,9 @@ import sys, os
 import pandas as pd
 
 from pathlib import Path
-path_root = Path(__file__).parents[3]  # upto 'codebase' folder
+path_root = Path(__file__).parents[3]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 import numpy as np
 from utils import PPIPUtils
@@ -23,7 +23,7 @@ def writeScore(predictions,classes, fOut, predictionsFName=None, thresholds=[0.0
     finalClasses = np.hstack(classes)
     results = PPIPUtils.calcScores(finalClasses,finalPredictions,thresholds)
     
-    #format total metrics, and write them to a file
+    
     lst = PPIPUtils.formatScores(results,'Total')
     for line in lst:
         fOut.write('\t'.join(str(s) for s in line) + '\n')
@@ -48,13 +48,12 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
     
     if featureFolder[-1] != '/':
         featureFolder += '/'
-    # ############### EXTRA CODE ADDED -START #####################
-    # check whether outResults CSV exists; if it exists, then load it
+    
     outResultDf = None
     outResultCsvFileName = outResultsName.replace('.txt', '.csv')
     if os.path.exists(outResultCsvFileName):
         outResultDf = pd.read_csv(outResultCsvFileName)
-    # ############### EXTRA CODE ADDED -END #####################
+    
 
     #open file to write results to for each fold/split
     if resultsAppend and outResultsName:
@@ -114,20 +113,20 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
                 outResults.write('\t'.join(str(s) for s in line) + '\n')
                 print(line)
             outResults.write('\n')
-            # ############### EXTRA CODE ADDED -START #####################
+            
             outResults.close()
             outResults = open(outResultsName,'a')
-            # create score_df
+            
             score_df = pd.DataFrame({'Fold': ['Fold '+str(i)]
                             , 'ACC': [results['ACC']], 'AUC': [results['AUC']], 'Prec': [results['Prec']], 'Recall': [results['Recall']]
                             , 'Thresholds': [results['Thresholds']], 'Max Precision': [results['Max Precision']]
                             , 'Avg Precision': [results['Avg Precision']]
                             })
-            # store the score_df into outResultDf
+            
             outResultDf = score_df if outResultDf is None else pd.concat([outResultDf, score_df], axis=0, sort=False)
-            # save outResultDf as CSV
+            
             outResultDf.to_csv(outResultCsvFileName, index=False)
-            # ############### EXTRA CODE ADDED -END #####################
+            
         else:
             for line in lst:
                 print(line)
@@ -150,23 +149,21 @@ def runTest(modelClass, outResultsName,trainSets,testSets,featureFolder,hyperPar
     return (totalPredictions, totalClasses,model,trainedModelsLst)
 
 
-
-
 #Same as runTest, but takes a list of list of tests, and a list of filenames, allowing running multiple test sets and storing to multiple files
 def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder,hyperParams = {},predictionsNameLst=None,loadedModel= None,modelsLst = None,thresholds = [0.01,0.03,0.05,0.1,0.25,0.5,1],resultsAppend=False,keepModels=False,saveModels=None,predictionsFLst = None,startIdx=0,loads=None):
     #record total time for computation
     t = time.time()
     if featureFolder[-1] != '/':
         featureFolder += '/'
-    # ############### EXTRA CODE ADDED -START #####################
-    # check whether outResults CSV files exist; if they exist, then load them
+    
+    
     outResultDfLst = []
     for i in range(0,len(testSetsLst)):
         indivOutResultCsvFileName = outResultsNameLst[i].replace('.txt', '.csv')
         outResultDfLst.insert(i, None)
         if os.path.exists(indivOutResultCsvFileName):
             outResultDfLst.insert(i, pd.read_csv(indivOutResultCsvFileName))
-    # ############### EXTRA CODE ADDED -END #####################    
+    
     #keep list of predictions/classes per fold
     totalPredictions = []
     totalClasses = []
@@ -239,20 +236,20 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
                     outResults[testIdx].write('\t'.join(str(s) for s in line) + '\n')
                     print(line)
                 outResults[testIdx].write('\n')
-                # ############### EXTRA CODE ADDED -START #####################
+                
                 outResults[testIdx].close()
                 outResults[testIdx] = open(outResultsNameLst[testIdx],'a')
-                # create score_df
+                
                 score_df = pd.DataFrame({'Fold': ['Fold '+str(i)]
                                 , 'ACC': [results['ACC']], 'AUC': [results['AUC']], 'Prec': [results['Prec']], 'Recall': [results['Recall']]
                                 , 'Thresholds': [results['Thresholds']], 'Max Precision': [results['Max Precision']]
                                 , 'Avg Precision': [results['Avg Precision']]
                                 })
-                # store the score_df into the respective outResultDf
+                
                 outResultDfLst[testIdx] = score_df if outResultDfLst[testIdx] is None else pd.concat([outResultDfLst[testIdx], score_df], axis=0, sort=False)
-                # save the respective outResultDf as CSV
+                
                 outResultDfLst[testIdx].to_csv(outResultsNameLst[testIdx].replace('.txt', '.csv'), index=False)
-                # ############### EXTRA CODE ADDED -END #####################
+                
             else:
                 for line in lst:
                     print(line)
@@ -275,26 +272,21 @@ def runTestLst(modelClass, outResultsNameLst,trainSets,testSetsLst,featureFolder
 
 
 def calcOverallScore_Pos50(outResultsName):
-    print('\n #### inside the calcOverallScore_Pos50() method - Start')
-    print('outResultsName: ' + str(outResultsName))
     outResultCsvFileName = outResultsName.replace('.txt', '.csv')
     outResultDf = pd.read_csv(outResultCsvFileName)
-    # find average ACC and AUC val
+    
     avg_ACC = outResultDf['ACC'].mean()
     avg_AUC = outResultDf['AUC'].mean()
-    print('avg_ACC = ' + str(avg_ACC) + ' :: avg_AUC ' + str(avg_AUC))
-    # save the average values as separate columns of the outResultDf
+    
+    
     outResultDf['avg_ACC'] = [avg_ACC] + [''] * (outResultDf.shape[0] - 1)
     outResultDf['avg_AUC'] = [avg_AUC] + [''] * (outResultDf.shape[0] - 1)
-    # save outResultDf
+    
     outResultDf.to_csv(outResultCsvFileName, index=False)
-    print('#### inside the calcOverallScore_Pos50() method - End') 
 
 
 def calcOverallScore_Pos20(outResultsNameLst):
-    print('\n #### inside the calcOverallScore_Pos20() method - Start')
     for outResultsName in outResultsNameLst:
-        print('outResultsName: ' + str(outResultsName))
         outResultCsvFileName = outResultsName.replace('.txt', '.csv')
         outResultDf = pd.read_csv(outResultCsvFileName)
         # calculate avg_Prec
@@ -325,11 +317,11 @@ def calcOverallScore_Pos20(outResultsNameLst):
             indiv_Avg_P_val = indiv_Avg_P_lst[-1]  # last number for 100% recall
             con_avg_p_lst.append(indiv_Avg_P_val)
         avg_Avg_P = np.asarray(con_avg_p_lst).mean()
-        print('avg_Prec = ' + str(avg_Prec) + ' :: avg_Avg_P ' + str(avg_Avg_P))
+        
         # save the average values as separate rows of the outResultDf
         outResultDf['avg_Prec'] = [avg_Prec] + [''] * (outResultDf.shape[0] - 1)
         outResultDf['avg_Avg_P'] = [avg_Avg_P] + [''] * (outResultDf.shape[0] - 1)
         # save outResultDf
         outResultDf.to_csv(outResultCsvFileName, index=False)
     # end of for loop: for outResultsName in outResultsNameLst:
-    print('#### inside the calcOverallScore_Pos20() method - End') 
+    

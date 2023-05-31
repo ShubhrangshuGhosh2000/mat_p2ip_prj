@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
-path_root = Path(__file__).parents[2]  # upto 'codebase' folder
+path_root = Path(__file__).parents[2]  
 sys.path.insert(0, str(path_root))
-# print(sys.path)
+
 
 from proc.mat_p2ip.SimpleTorchDictionaryDataset_mat import SimpleTorchDictionaryDataset
 
@@ -33,7 +33,7 @@ class GenericNetworkModel(object):
 
     def saveModelToFile(self,fname):
         if self.model is None:
-            print('Error, no model to save')
+            
             exit(42)
         self.model.save(fname)
 
