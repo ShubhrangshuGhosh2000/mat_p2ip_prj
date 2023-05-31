@@ -12,6 +12,3 @@ AD: Alzheimer Disease; DS: Different Species (Mosuse, Fly, Worm, Yeast, Ecoli).
 
  * There are redundancies in the codebase (specially in 'mtf_p2ip' folder) as we used to run different sets of experiments concurrently on a single machine.
 
-
-
-### (\*) remove all the comments by using regular expression:  #.* with blank (no space) at the end, after taking a backup of codebase with all the comments. 
