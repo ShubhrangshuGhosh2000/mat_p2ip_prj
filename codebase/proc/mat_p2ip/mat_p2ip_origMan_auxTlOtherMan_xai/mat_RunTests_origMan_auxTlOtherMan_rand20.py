@@ -14,7 +14,7 @@ from proc.mat_p2ip.mat_p2ip_origMan_auxTlOtherMan_xai import mat_RunTrainTest_or
 
 
 root_path = os.path.join('/project/root/directory/path/here')
-root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
+
 
 resultsFolderName = os.path.join(root_path, 'dataset/proc_data/mat_res/mat_res_origMan_auxTlOtherMan_xai/')
 

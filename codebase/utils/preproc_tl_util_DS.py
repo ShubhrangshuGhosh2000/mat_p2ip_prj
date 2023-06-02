@@ -67,7 +67,7 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
     print('original sequence list length = ' + str(len(seq_lst_with_space)))
     print('total number of partitions (each of size ' + str(part_size) + ') = ' + str(tot_no_of_parts))
 
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
+    
     temp_feat_lst = []  # for the intermediate saving purpose
     temp_result_dir = os.path.join(root_path, 'temp_result_' + spec_type)  # for the iteration-wise intermediate pkl file saving purpose
     temp_per_prot_emb_result_dir = os.path.join(root_path, 'temp_per_prot_emb_result_' + spec_type)  # for the iteration-wise intermediate per protein embedding list saving purpose
@@ -164,4 +164,4 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
 
 if __name__ == '__main__':
     root_path = os.path.join('/project/root/directory/path/here')
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
+    

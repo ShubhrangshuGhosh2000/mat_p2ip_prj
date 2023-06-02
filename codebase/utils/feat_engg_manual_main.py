@@ -85,7 +85,7 @@ def extract_prot_seq_2D_manual_feat(folderName,featureSets,processPSSM=True,devi
 
 if __name__ == '__main__':
     root_path = os.path.join('/project/root/directory/path/here')
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
+    
 
     prot_seq = 'MIFTPFLPPADLSVFQNVKGLQNDPE'
     feature_type_lst = ['AC30', 'PSAAC15', 'ConjointTriad', 'LD10_CTD']

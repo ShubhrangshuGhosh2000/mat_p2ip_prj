@@ -55,7 +55,7 @@ def prepare_tl_feat_for_AD_seq(root_path='./', protTrans_model_path='./', protTr
 
 if __name__ == '__main__':
     root_path = os.path.join('/project/root/directory/path/here')
-    root_path = os.path.join('/scratch/pralaycs/Shubh_Working_Remote/PPI_Wkspc/PPI_Code/mat_p2ip_prj')
+    
 
     # parse_AD_to_fasta(root_path)
     prepare_tl_feat_for_AD_seq(root_path
