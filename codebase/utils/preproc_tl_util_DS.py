@@ -8,6 +8,8 @@ import numpy as np
 import torch
 from transformers import T5EncoderModel, T5Tokenizer
 
+root_path = os.path.join('/project/root/directory/path/here')
+
 
 # load ProtTrans tl-model for the given type of model
 def load_protTrans_tl_model(protTrans_model_path='./', protTrans_model_name = 'prot_t5_xl_uniref50'):
@@ -67,7 +69,6 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
     print('original sequence list length = ' + str(len(seq_lst_with_space)))
     print('total number of partitions (each of size ' + str(part_size) + ') = ' + str(tot_no_of_parts))
 
-    
     temp_feat_lst = []  # for the intermediate saving purpose
     temp_result_dir = os.path.join(root_path, 'temp_result_' + spec_type)  # for the iteration-wise intermediate pkl file saving purpose
     temp_per_prot_emb_result_dir = os.path.join(root_path, 'temp_per_prot_emb_result_' + spec_type)  # for the iteration-wise intermediate per protein embedding list saving purpose
@@ -83,7 +84,6 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
         # latest_pkl_fl_nm = max(all_pkl_fl_nm_lst, key=os.path.getctime)
         # extracting the max iteration index
         latest_pkl_file_index = max(pkl_file_ind_lst)
-    # latest_pkl_file_index = 35368  # ################### HARD CODED
     print('##### latest_pkl_file_index: ' + str(latest_pkl_file_index))
 
     cuda_error = False
@@ -163,5 +163,5 @@ def extract_feat_from_preloaded_protTrans(seq_lst, model, tokenizer, spec_type, 
 
 
 if __name__ == '__main__':
-    root_path = os.path.join('/project/root/directory/path/here')
-    
+    # print('in main')
+    pass
