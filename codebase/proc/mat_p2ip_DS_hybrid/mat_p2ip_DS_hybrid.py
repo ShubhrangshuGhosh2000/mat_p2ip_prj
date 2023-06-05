@@ -13,7 +13,7 @@ root_path = os.path.join('/project/root/directory/path/here')
 
 orig_dscript_data_path = os.path.join('/original_D_SCRIPT_project/cross_species_prediction_result/path/here')
 mat_p2ip_DS_data_path = os.path.join(root_path, 'dataset/proc_data_DS')
-g = os.path.join(root_path, 'dataset/proc_data_DS/mat_p2ip_DS_hybrid')
+mat_p2ip_hybrid_data_path = os.path.join(root_path, 'dataset/proc_data_DS/mat_p2ip_DS_hybrid')
 
 
 def create_hybrid_score(spec_type = 'ecoli'):
