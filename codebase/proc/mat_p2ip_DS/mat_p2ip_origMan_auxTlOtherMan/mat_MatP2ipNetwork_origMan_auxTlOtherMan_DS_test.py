@@ -220,25 +220,25 @@ class MatP2ipNetworkModule(GenericNetworkModule):
         dataLookupSkip, dataMatrixSkip = self.loadEncodingFileWithPadding(featureFolder+'SkipGramAA7H5.encode',self.maxProteinLength)
         dataLookupLabelEncode, dataMatrixLabelEncode = self.loadLabelEncodingFileWithPadding(featureFolder+'LabelEncoding.encode',self.maxProteinLength)
         
-        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS/derived_feat', spec_type, 'pssm_dict.pkl')
+        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data_DS/derived_feat', spec_type, 'pssm_dict.pkl')
         pssm_dict = joblib.load(pssm_dict_pkl_path)
         
         for prot_id in list(pssm_dict.keys()):
             pssm_dict[prot_id]['seq'] = None
         
-        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS/derived_feat', spec_type, 'blosum62_dict.pkl')
+        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data_DS/derived_feat', spec_type, 'blosum62_dict.pkl')
         blosum62_dict = joblib.load(blosum62_dict_pkl_path)
         
         for prot_id in list(blosum62_dict.keys()):
             blosum62_dict[prot_id]['seq'] = None
         
-        DS_seq_feat_dict_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS', 'DS_seq_feat_dict_prot_t5_xl_uniref50_' + spec_type + '.pkl')
+        DS_seq_feat_dict_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data_DS', 'DS_seq_feat_dict_prot_t5_xl_uniref50_' + spec_type + '.pkl')
         DS_seq_feat_dict = joblib.load(DS_seq_feat_dict_path)
         
         for prot_id in list(DS_seq_feat_dict.keys()):
             DS_seq_feat_dict[prot_id]['seq'] = DS_seq_feat_dict[prot_id]['seq_2d_feat'] = None
         
-        DS_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[5], 'dataset/preproc_data_DS','DS_seq_manual_feat_dict_' + spec_type + '.pkl'))
+        DS_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[4], 'dataset/preproc_data_DS','DS_seq_manual_feat_dict_' + spec_type + '.pkl'))
         
         for prot_id in list(DS_seq_manual_feat_dict.keys()):
             DS_seq_manual_feat_dict[prot_id]['seq'] = None
