@@ -203,25 +203,25 @@ class MatP2ipNetworkModule(GenericNetworkModule):
         dataLookupSkip, dataMatrixSkip = self.loadEncodingFileWithPadding(featureFolder+'SkipGramAA7H5.encode',self.maxProteinLength)
         dataLookupLabelEncode, dataMatrixLabelEncode = self.loadLabelEncodingFileWithPadding(featureFolder+'LabelEncoding.encode',self.maxProteinLength)
         
-        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'pssm_dict.pkl')
+        pssm_dict_pkl_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'pssm_dict.pkl')
         pssm_dict = joblib.load(pssm_dict_pkl_path)
         
         for prot_id in list(pssm_dict.keys()):
             pssm_dict[prot_id]['seq'] = None
         
-        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'blosum62_dict.pkl')
+        blosum62_dict_pkl_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data/derived_feat/PPI_Datasets/Human2021/', 'blosum62_dict.pkl')
         blosum62_dict = joblib.load(blosum62_dict_pkl_path)
         
         for prot_id in list(blosum62_dict.keys()):
             blosum62_dict[prot_id]['seq'] = None
         
-        human_seq_feat_dict_path = os.path.join(Path(__file__).parents[5], 'dataset/preproc_data', 'human_seq_1d_feat_dict_prot_t5_xl_uniref50.pkl')
+        human_seq_feat_dict_path = os.path.join(Path(__file__).parents[4], 'dataset/preproc_data', 'human_seq_1d_feat_dict_prot_t5_xl_uniref50.pkl')
         human_seq_feat_dict = joblib.load(human_seq_feat_dict_path)
         
         for prot_id in list(human_seq_feat_dict.keys()):
             human_seq_feat_dict[prot_id]['seq'] = human_seq_feat_dict[prot_id]['seq_2d_feat'] = None
         
-        human_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[5], 'dataset/preproc_data','human_seq_manual_feat_dict.pkl'))
+        human_seq_manual_feat_dict = joblib.load(os.path.join(Path(__file__).parents[4], 'dataset/preproc_data','human_seq_manual_feat_dict.pkl'))
         
         for prot_id in list(human_seq_manual_feat_dict.keys()):
             human_seq_manual_feat_dict[prot_id]['seq'] = None
