@@ -1,5 +1,5 @@
-# MaTPIP
-This repository contains the code for the paper [MaTPIP: a deep-learning architecture with eXplainable AI for sequence-driven, feature mixed protein-protein interaction prediction](https://doi.org/10.1016/j.cmpb.2023.107955) by Shubhrangshu Ghosh and Pralay Mitra.
+# MaTPIP: a deep-learning architecture with eXplainable AI for sequence-driven, feature mixed protein-protein interaction prediction
+:pushpin: This repository contains the code for the paper [MaTPIP: a deep-learning architecture with eXplainable AI for sequence-driven, feature mixed protein-protein interaction prediction](https://doi.org/10.1016/j.cmpb.2023.107955) by Shubhrangshu Ghosh and Pralay Mitra.
 
 ### Abstract
 
@@ -26,13 +26,13 @@ AD: Alzheimer Disease; DS: Different Species (Mosuse, Fly, Worm, Yeast, Ecoli).
  * There are redundancies in the codebase (specially in [mat_p2ip](https://github.com/ShubhrangshuGhosh2000/mat_p2ip_prj/tree/main/codebase/proc/mat_p2ip) folder) as we used to run different sets of experiments concurrently on a single machine.
 
 ## Citation
-```
+If you find our project is helpful, please feel free to leave a star and cite our paper:
+```BibTeX
 @article{ghosh2023matpip,
   title={MaTPIP: A deep-learning architecture with eXplainable AI for sequence-driven, feature mixed protein-protein interaction prediction},
   author={Ghosh, Shubhrangshu and Mitra, Pralay},
   journal={Computer Methods and Programs in Biomedicine},
   pages={107955},
-  year={2023},
-  publisher={Elsevier}
+  year={2023}
 }
 ```
