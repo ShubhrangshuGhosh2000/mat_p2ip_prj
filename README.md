@@ -12,17 +12,18 @@ This repository contains the code for the paper [MaTPIP: a deep-learning archite
 *Conclusions:* MaTPIP mixes manually curated features with the feature extracted from the pre-trained PLM to predict sequence-based protein-protein association. Furthermore, MaTPIP demonstrates strong generalization capabilities for cross-species PPI predictions.
 
 ## Instructions for the codebase
+  * All experiments were conducted using a runtime infrastructure that utilizes a single machine equipped with 187 GB of RAM, a 16 GB GPU (Nvidia Tesla V100), and an Intel Xeon Gold 6148 CPU @ 2.40 GHz. The selection of machines for each experiment is based on the availability of a cluster with similar machine specifications. Distributed GPU training is not employed, with the exception of the model creation for cross-species protein-protein interaction (PPI) testing. In this specific case, two GPUs, each with 16 GB of memory, are utilized in data-parallel mode.
 
- * We have used conda environment with Python 3.8.1 for execution. The conda environment is created using *py381_gpu_param.yml* file.
+ * We have used conda environment with Python 3.8.1 for code execution. The conda environment is created using [`py381_gpu_param.yml`](https://github.com/ShubhrangshuGhosh2000/mat_p2ip_prj/tree/main/py381_gpu_param.yml) file.
 
- * To run a complete code-flow in any of the modules in the 'proc' folder, please check the files with name pattern *xxx_RunTests_yyy.py*. 
+ * To run a complete code-flow in any of the modules in the [proc](https://github.com/ShubhrangshuGhosh2000/mat_p2ip_prj/tree/main/codebase/proc) folder, please check the files with name pattern *xxx_RunTests_yyy.py*. 
 
  * Some abbreviations used in the codebase are:
 AD: Alzheimer Disease; DS: Different Species (Mosuse, Fly, Worm, Yeast, Ecoli).
 
  * 'origMan' in the codebase implies 2-Dimensional Manually curated Features. Similary 'auxTl' and 'OtherMan' correspond to 1-Dimensional pre-trained Protein Language Model (PLM)-based Features and 1-Dimensional Manually curated Features respectively.
 
- * There are redundancies in the codebase (specially in 'mat_p2ip' folder) as we used to run different sets of experiments concurrently on a single machine.
+ * There are redundancies in the codebase (specially in [mat_p2ip](https://github.com/ShubhrangshuGhosh2000/mat_p2ip_prj/tree/main/codebase/proc/mat_p2ip) folder) as we used to run different sets of experiments concurrently on a single machine.
 
 ## Citation
 ```
