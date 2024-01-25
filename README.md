@@ -28,12 +28,15 @@ AD: Alzheimer Disease; DS: Different Species (Mosuse, Fly, Worm, Yeast, Ecoli).
 ## Citation
 If you find our project is helpful, please feel free to leave a star and cite our paper:
 ```BibTeX
-@article{ghosh2023matpip,
+@article{ghosh2024matpip,
   title={MaTPIP: A deep-learning architecture with eXplainable AI for sequence-driven, feature mixed protein-protein interaction prediction},
   author={Ghosh, Shubhrangshu and Mitra, Pralay},
   journal={Computer Methods and Programs in Biomedicine},
+  volume = {244},
   pages={107955},
-  year={2023}
+  year = {2024},
+  issn = {0169-2607},
+  doi = {https://doi.org/10.1016/j.cmpb.2023.107955}
 }
 ```
 
